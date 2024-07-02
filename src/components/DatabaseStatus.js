@@ -7,7 +7,7 @@ const DatabaseStatus = () => {
   useEffect(() => {
     const checkConnection = async () => {
       try {
-        const response = await fetch('http://localhost:5000/api/db-status');
+        const response = await fetch('/.netlify/functions/db-status');
         const data = await response.json();
         setIsConnected(data.status === 'connected');
         setError(null);
