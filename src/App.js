@@ -1,3 +1,4 @@
+// Импортируем необходимые библиотеки и компоненты
 import React, { useState } from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import BudgetView from './components/BudgetView';
@@ -100,15 +101,19 @@ const initialSampleData = {
   },
 };
 
+// Основной компонент приложения
 const App = () => {
+  // Используем хук useState для управления состоянием выбранного месяца
   const [selectedMonth, setSelectedMonth] = useState('Апрель');
+  // Используем хук useState для управления данными бюджета
   const [budgetData, setBudgetData] = useState(initialSampleData);
 
+  // Функция для добавления нового элемента бюджета
   const addBudgetItem = (newItem, weekIndex) => {
     setBudgetData(prevData => {
-      const updatedData = { ...prevData };
-      const currentMonth = updatedData[selectedMonth];
-      const currentWeek = currentMonth.weeks[weekIndex];
+      const updatedData = { ...prevData }; // Копируем предыдущие данные бюджета
+      const currentMonth = updatedData[selectedMonth]; // Получаем данные текущего месяца
+      const currentWeek = currentMonth.weeks[weekIndex]; // Получаем данные текущей недели
 
       // Определяем, в какую категорию добавить новый элемент
       let targetCategory;
@@ -123,7 +128,7 @@ const App = () => {
       // Добавляем новый элемент в соответствующую категорию
       currentWeek[targetCategory] = [
         ...currentWeek[targetCategory],
-        { ...newItem, id: Date.now() } // используем текущее время как уникальный id
+        { ...newItem, id: Date.now() } // Используем текущее время как уникальный id
       ];
 
       // Пересчитываем баланс недели и месяца
@@ -134,23 +139,26 @@ const App = () => {
     });
   };
 
+  // Функция для расчета баланса недели
   const calculateWeekBalance = (week) => {
-    const totalIncome = week.income.reduce((sum, item) => sum + item.amount, 0);
-    const totalMainExpenses = week.mainExpenses.reduce((sum, item) => sum + item.amount, 0);
-    const totalPersonalExpenses = week.personalExpenses.reduce((sum, item) => sum + item.amount, 0);
-    return totalIncome - totalMainExpenses - totalPersonalExpenses;
+    const totalIncome = week.income.reduce((sum, item) => sum + item.amount, 0); // Суммируем доходы
+    const totalMainExpenses = week.mainExpenses.reduce((sum, item) => sum + item.amount, 0); // Суммируем основные расходы
+    const totalPersonalExpenses = week.personalExpenses.reduce((sum, item) => sum + item.amount, 0); // Суммируем личные расходы
+    return totalIncome - totalMainExpenses - totalPersonalExpenses; // Вычисляем баланс недели
   };
 
+  // Рендерим компонент приложения
   return (
     <div className="app">
-      <DatabaseStatus />
-      <MonthCarousel selectedMonth={selectedMonth} onSelectMonth={setSelectedMonth} />
+      <DatabaseStatus /> {/* Компонент статуса базы данных */}
+      <MonthCarousel selectedMonth={selectedMonth} onSelectMonth={setSelectedMonth} /> {/* Компонент карусели месяцев */}
       <BudgetView 
         monthData={budgetData[selectedMonth]} 
-        onAddItem={(newItem, weekIndex) => addBudgetItem(newItem, weekIndex)}
+        onAddItem={(newItem, weekIndex) => addBudgetItem(newItem, weekIndex)} // Функция добавления нового элемента бюджета
       />
     </div>
   );
 };
 
+// Экспортируем компонент приложения
 export default App;
