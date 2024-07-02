@@ -16,10 +16,13 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "install-server": "cd server && npm install",
+    "install-client": "npm install",
+    "install-all": "npm run install-server && npm run install-client",
+    "start-server": "cd server && npm start",
+    "start-client": "npm start",
     "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "npm run install-all && concurrently \"npm run start-server\" \"npm run start-client\""
   },
   "eslintConfig": {
     "extends": [
@@ -38,5 +41,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
