@@ -1,5 +1,5 @@
 // Импортируем необходимые библиотеки и компоненты
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import BudgetView from './components/BudgetView';
 import DatabaseStatus from './components/DatabaseStatus';
