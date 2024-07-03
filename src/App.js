@@ -169,11 +169,17 @@ const App = () => {
   // Рендерим компонент приложения
   return (
     <div className="app">
-      <DatabaseStatus /> {/* Компонент статуса базы данных */}
-      <MonthCarousel selectedMonth={selectedMonth} onSelectMonth={setSelectedMonth} /> {/* Компонент карусели месяцев */}
+      <DatabaseStatus />
+      {months.length > 0 && (
+        <MonthCarousel
+          months={months}
+          selectedMonth={selectedMonth}
+          onSelectMonth={setSelectedMonth}
+        />
+      )}
       <BudgetView 
         monthData={budgetData[selectedMonth]} 
-        onAddItem={(newItem, weekIndex) => addBudgetItem(newItem, weekIndex)} // Функция добавления нового элемента бюджета
+        onAddItem={(newItem, weekIndex) => addBudgetItem(newItem, weekIndex)}
       />
     </div>
   );
