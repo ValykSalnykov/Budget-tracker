@@ -13,7 +13,7 @@ exports.handler = async function(event, context) {
     let connection;
     try {
       connection = await mysql.createConnection(dbConfig);
-      const [rows] = await connection.execute('SELECT MonthId, Name, `Month Number` as monthNumber FROM months ORDER BY `Month Number`');
+      const [rows] = await connection.execute('SELECT MonthId, Name, `Month Number` as monthNumber FROM Months ORDER BY `Month Number`');
       return {
         statusCode: 200,
         body: JSON.stringify(rows)
