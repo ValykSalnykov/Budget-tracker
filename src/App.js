@@ -103,10 +103,29 @@ const initialSampleData = {
 
 // Основной компонент приложения
 const App = () => {
+  const [months, setMonths] = useState([]);
   // Используем хук useState для управления состоянием выбранного месяца
-  const [selectedMonth, setSelectedMonth] = useState('Апрель');
+  const [selectedMonth, setSelectedMonth] = useState('');
   // Используем хук useState для управления данными бюджета
   const [budgetData, setBudgetData] = useState(initialSampleData);
+
+  useEffect(() => {
+    const fetchMonths = async () => {
+      try {
+        const response = await fetch('/.netlify/functions/get-months');
+        if (!response.ok) throw new Error('Failed to fetch months');
+        const data = await response.json();
+        setMonths(data);
+        if (data.length > 0) {
+          setSelectedMonth(data[0].name);
+        }
+      } catch (error) {
+        console.error('Error fetching months:', error);
+      }
+    };
+
+    fetchMonths();
+  }, []);
 
   // Функция для добавления нового элемента бюджета
   const addBudgetItem = (newItem, weekIndex) => {
