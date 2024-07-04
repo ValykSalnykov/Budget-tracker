@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect} from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import WeekSelector from './components/WeekSelector';
 import DatabaseStatus from './components/DatabaseStatus';
