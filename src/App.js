@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import WeekSelector from './components/WeekSelector';
 import DatabaseStatus from './components/DatabaseStatus';
-import './styles/App.css';
+import './App.css';
 
 // Utility function for debounce
 const debounce = (func, wait) => {
