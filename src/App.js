@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import WeekSelector from './components/WeekSelector';
 import DatabaseStatus from './components/DatabaseStatus';
 import './App.css';
 
-// Utility function for debounce
 const debounce = (func, wait) => {
   let timeout;
   return (...args) => {
@@ -34,16 +33,13 @@ const App = () => {
         const data = await response.json();
         setMonths(data);
         
-        // Get current month number (1-12)
         const currentMonth = new Date().getMonth() + 1;
         
-        // Find the month object that corresponds to the current month
         const currentMonthData = data.find(month => month.monthNumber === currentMonth);
         
         if (currentMonthData) {
           setSelectedMonth(currentMonthData.MonthId);
         } else if (data.length > 0) {
-          // Fallback to first month if current month not found
           setSelectedMonth(data[0].MonthId);
         }
       } catch (error) {
@@ -57,37 +53,37 @@ const App = () => {
     fetchMonths();
   }, []);
 
-  useEffect(() => {
-    const fetchWeeks = async (monthId) => {
-      setIsLoadingWeeks(true);
-      setError(null);
-      try {
-        const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Failed to fetch weeks: ${errorData.error}`);
-        }
-        const data = await response.json();
-        setWeeks(data);
-        setSelectedWeek(data.length > 0 ? data[0].WeeksId : null);
-      } catch (error) {
-        console.error('Error fetching weeks:', error);
-        setError('Failed to load weeks. Please try again later.');
-      } finally {
-        setIsLoadingWeeks(false);
+  const fetchWeeks = useCallback(async (monthId) => {
+    setIsLoadingWeeks(true);
+    setError(null);
+    try {
+      const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(`Failed to fetch weeks: ${errorData.error}`);
       }
-    };
+      const data = await response.json();
+      setWeeks(data);
+      setSelectedWeek(data.length > 0 ? data[0].WeeksId : null);
+    } catch (error) {
+      console.error('Error fetching weeks:', error);
+      setError('Failed to load weeks. Please try again later.');
+    } finally {
+      setIsLoadingWeeks(false);
+    }
+  }, []);
 
-    const debouncedFetchWeeks = debounce((monthId) => fetchWeeks(monthId), 300);
+  const debouncedFetchWeeks = useCallback(
+    debounce((monthId) => fetchWeeks(monthId), 100),
+    [fetchWeeks]
+  );
 
+  useEffect(() => {
     if (selectedMonth) {
-      setWeeks([]); // Clear weeks immediately
+      setWeeks([]);
       debouncedFetchWeeks(selectedMonth);
     }
-
-    // Cleanup function to cancel any pending debounced calls
-    return () => debouncedFetchWeeks.cancel();
-  }, [selectedMonth]);
+  }, [selectedMonth, debouncedFetchWeeks]);
 
   const handleMonthSelect = (monthId) => {
     setSelectedMonth(monthId);
