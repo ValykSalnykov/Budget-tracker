@@ -5,9 +5,13 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' });
 };
 
-const WeekSelector = ({ weeks, selectedWeek, onSelectWeek }) => {
+const WeekSelector = ({ weeks, selectedWeek, onSelectWeek, isLoading }) => {
+  if (isLoading) {
+    return <div className="loading"></div>;
+  }
+
   if (weeks.length === 0) {
-    return <div className="no-weeks">Нет доступных недель</div>;
+    return <div className="no-weeks"></div>;
   }
 
   return (
@@ -27,6 +31,5 @@ const WeekSelector = ({ weeks, selectedWeek, onSelectWeek }) => {
     </div>
   );
 };
-
 
 export default WeekSelector;
