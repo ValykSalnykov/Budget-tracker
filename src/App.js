@@ -21,38 +21,6 @@ const App = () => {
   const [isLoadingWeeks, setIsLoadingWeeks] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchMonths = async () => {
-      setIsLoadingMonths(true);
-      setError(null);
-      try {
-        const response = await fetch('/.netlify/functions/get-months');
-        if (!response.ok) {
-          throw new Error('Failed to fetch months');
-        }
-        const data = await response.json();
-        setMonths(data);
-        
-        const currentMonth = new Date().getMonth() + 1;
-        
-        const currentMonthData = data.find(month => month.monthNumber === currentMonth);
-        
-        if (currentMonthData) {
-          setSelectedMonth(currentMonthData.MonthId);
-        } else if (data.length > 0) {
-          setSelectedMonth(data[0].MonthId);
-        }
-      } catch (error) {
-        console.error('Error fetching months:', error);
-        setError('Failed to load months. Please try again later.');
-      } finally {
-        setIsLoadingMonths(false);
-      }
-    };
-
-    fetchMonths();
-  }, []);
-
   const fetchWeeks = useCallback(async (monthId) => {
     setIsLoadingWeeks(true);
     setError(null);
@@ -74,13 +42,48 @@ const App = () => {
   }, []);
 
   const debouncedFetchWeeks = useCallback(
-    debounce((monthId) => fetchWeeks(monthId), 100),
+    debounce((monthId) => fetchWeeks(monthId), 300),
     [fetchWeeks]
   );
 
   useEffect(() => {
+    const fetchMonths = async () => {
+      setIsLoadingMonths(true);
+      setError(null);
+      try {
+        const response = await fetch('/.netlify/functions/get-months');
+        if (!response.ok) {
+          throw new Error('Failed to fetch months');
+        }
+        const data = await response.json();
+        setMonths(data);
+        
+        // Get current month number (1-12)
+        const currentMonth = new Date().getMonth() + 1;
+        
+        // Find the month object that corresponds to the current month
+        const currentMonthData = data.find(month => month.monthNumber === currentMonth);
+        
+        if (currentMonthData) {
+          setSelectedMonth(currentMonthData.MonthId);
+        } else if (data.length > 0) {
+          // Fallback to first month if current month not found
+          setSelectedMonth(data[0].MonthId);
+        }
+      } catch (error) {
+        console.error('Error fetching months:', error);
+        setError('Failed to load months. Please try again later.');
+      } finally {
+        setIsLoadingMonths(false);
+      }
+    };
+
+    fetchMonths();
+  }, []);
+
+  useEffect(() => {
     if (selectedMonth) {
-      setWeeks([]);
+      setWeeks([]); // Clear weeks immediately
       debouncedFetchWeeks(selectedMonth);
     }
   }, [selectedMonth, debouncedFetchWeeks]);
