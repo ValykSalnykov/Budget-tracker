@@ -33,13 +33,16 @@ const App = () => {
         const data = await response.json();
         setMonths(data);
         
+        // Get current month number (1-12)
         const currentMonth = new Date().getMonth() + 1;
         
+        // Find the month object that corresponds to the current month
         const currentMonthData = data.find(month => month.monthNumber === currentMonth);
         
         if (currentMonthData) {
           setSelectedMonth(currentMonthData.MonthId);
         } else if (data.length > 0) {
+          // Fallback to first month if current month not found
           setSelectedMonth(data[0].MonthId);
         }
       } catch (error) {
@@ -53,37 +56,37 @@ const App = () => {
     fetchMonths();
   }, []);
 
-  const fetchWeeks = useCallback(async (monthId) => {
-    setIsLoadingWeeks(true);
-    setError(null);
-    try {
-      const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Failed to fetch weeks: ${errorData.error}`);
-      }
-      const data = await response.json();
-      setWeeks(data);
-      setSelectedWeek(data.length > 0 ? data[0].WeeksId : null);
-    } catch (error) {
-      console.error('Error fetching weeks:', error);
-      setError('Failed to load weeks. Please try again later.');
-    } finally {
-      setIsLoadingWeeks(false);
-    }
-  }, []);
-
-  const debouncedFetchWeeks = useCallback(
-    debounce((monthId) => fetchWeeks(monthId), 100),
-    [fetchWeeks]
-  );
-
   useEffect(() => {
+    const fetchWeeks = async (monthId) => {
+      setIsLoadingWeeks(true);
+      setError(null);
+      try {
+        const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(`Failed to fetch weeks: ${errorData.error}`);
+        }
+        const data = await response.json();
+        setWeeks(data);
+        setSelectedWeek(data.length > 0 ? data[0].WeeksId : null);
+      } catch (error) {
+        console.error('Error fetching weeks:', error);
+        setError('Failed to load weeks. Please try again later.');
+      } finally {
+        setIsLoadingWeeks(false);
+      }
+    };
+
+    const debouncedFetchWeeks = debounce((monthId) => fetchWeeks(monthId), 300);
+
     if (selectedMonth) {
-      setWeeks([]);
+      setWeeks([]); // Clear weeks immediately
       debouncedFetchWeeks(selectedMonth);
     }
-  }, [selectedMonth, debouncedFetchWeeks]);
+
+    // Cleanup function to cancel any pending debounced calls
+    return () => debouncedFetchWeeks.cancel && debouncedFetchWeeks.cancel();
+  }, [selectedMonth]);
 
   const handleMonthSelect = (monthId) => {
     setSelectedMonth(monthId);
