@@ -77,7 +77,7 @@ const App = () => {
       }
     };
 
-    const debouncedFetchWeeks = debounce((monthId) => fetchWeeks(monthId), 300);
+    const debouncedFetchWeeks = debounce((monthId) => fetchWeeks(monthId), 100);
 
     if (selectedMonth) {
       setWeeks([]); // Clear weeks immediately
