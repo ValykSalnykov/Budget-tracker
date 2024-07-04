@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { fetchBudgetItems, createBudgetItem, updateBudgetItem, deleteBudgetItem } from '../api';
 import { Tooltip } from 'react-tooltip';
 import { PieChart, Pie, Cell } from 'recharts';
 import WeekSelector from './WeekSelector';
@@ -107,64 +106,5 @@ const BudgetView = ({ monthData, onAddItem }) => {
     </div>
   );
 };
-
-// const BudgetView = () => {
-//   const [budgetItems, setBudgetItems] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     loadBudgetItems();
-//   }, []);
-
-//   async function loadBudgetItems() {
-//     try {
-//       setLoading(true);
-//       const items = await fetchBudgetItems();
-//       setBudgetItems(items);
-//       setError(null);
-//     } catch (err) {
-//       setError('Не удалось загрузить бюджетные записи');
-//     } finally {
-//       setLoading(false);
-//     }
-//   }
-
-//   async function handleAddItem(newItem) {
-//     try {
-//       const createdItem = await createBudgetItem(newItem);
-//       setBudgetItems([...budgetItems, createdItem]);
-//     } catch (err) {
-//       setError('Не удалось добавить бюджетную запись');
-//     }
-//   }
-
-//   async function handleUpdateItem(id, updatedItem) {
-//     try {
-//       const updated = await updateBudgetItem(id, updatedItem);
-//       setBudgetItems(budgetItems.map(item => item.id === id ? updated : item));
-//     } catch (err) {
-//       setError('Не удалось обновить бюджетную запись');
-//     }
-//   }
-
-//   async function handleDeleteItem(id) {
-//     try {
-//       await deleteBudgetItem(id);
-//       setBudgetItems(budgetItems.filter(item => item.id !== id));
-//     } catch (err) {
-//       setError('Не удалось удалить бюджетную запись');
-//     }
-//   }
-
-//   if (loading) return <div>Загрузка...</div>;
-//   if (error) return <div>Ошибка: {error}</div>;
-
-//   return (
-//     <div>
-//       {/* Здесь добавьте компоненты для отображения и взаимодействия с бюджетными записями */}
-//     </div>
-//   );
-// };
 
 export default BudgetView;

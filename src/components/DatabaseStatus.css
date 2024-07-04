@@ -1,0 +1,36 @@
+.database-status {
+    height: 10px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    transition: background-color 0.3s ease;
+  }
+  
+  .status-indicator {
+    height: 100%;
+    width: 100%;
+    background-color: #F44336; /* Красный для отключенного состояния */
+  }
+  
+  .database-status.connected .status-indicator {
+    background-color: #4CAF50; /* Зеленый для подключенного состояния */
+  }
+  
+  .database-status.connecting .status-indicator {
+    background-color: #ffd931; /* Желтый для состояния подключения */
+    animation: pulse .3s infinite;
+  }
+  
+  @keyframes pulse {
+    0% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.5;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
