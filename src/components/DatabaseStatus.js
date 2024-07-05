@@ -18,7 +18,6 @@ const DatabaseStatus = () => {
     };
 
     checkConnection();
-    // Проверяем статус каждые 30 секунд
     const intervalId = setInterval(checkConnection, 60000);
 
     return () => clearInterval(intervalId);

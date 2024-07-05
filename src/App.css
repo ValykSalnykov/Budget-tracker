@@ -21,146 +21,18 @@ body {
   padding: 20px;
 }
 
-.month-display {
-  font-size: xx-large;
-}
-
-.budget-view, .budget-section, .month-carousel {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  background-color: var(--card-background);
-  border-radius: 15px;
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-  padding: 10px;
-  margin-top: 30px;
-  transition: all 0.3s ease;
-}
-
-.budget-section {
+.loading, .error {
+  text-align: center;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  font-size: 1.2rem;
 }
 
-.budget-section:hover, .week-button:hover, .add-button:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-}
-
-.header, .budget-summary, .week-selector {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  margin: 30px;
-}
-
-.update-button, .month-nav-button, .add-button, .week-button {
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.update-button, .month-nav-button {
-  padding: 5px 30px;
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-weight: 500;
-}
-
-.update-button:hover, .month-nav-button:hover {
-  background-color: #3a7bc8;
-  padding: 5px 100px;
-}
-
-.add-button {
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  font-size: 20px;
-  background-color: var(--secondary-color);
-}
-
-.add-button:hover {
-  background-color: #e69400;
-  transform: scale(1.1);
-}
-
-.budget-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
-  transition: background-color 0.3s ease;
-}
-
-.budget-item:hover {
-  background-color: #f9f9f9;
-}
-
-.edit-button, .delete-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 16px;
-  margin-left: 5px;
-  opacity: 0.6;
-  transition: opacity 0.3s ease;
-}
-
-.edit-button:hover, .delete-button:hover {
-  opacity: 1;
-}
-
-.legend, .week-button {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.legend-item, .week-button {
-  margin-bottom: 5px;
-}
-
-.week-button {
-  padding: 10px 20px;
-  border: 2px solid var(--primary-color);
-  border-radius: 10px;
-  background-color: var(--card-background);
-  min-width: 180px;
-}
-
-.week-button.selected {
-  background-color: var(--primary-color);
-  color: white;
-}
-
-.week-dates {
-  font-size: 0.9rem;
-  color: #666;
-}
-
-.week-button.selected .week-dates {
-  color: #e0e0e0;
+.error {
+  color: #e74c3c;
 }
 
 @media (max-width: 768px) {
-  .budget-sections {
-    grid-template-columns: 1fr;
-  }
-
-  .month-carousel {
-    padding: 15px;
-  }
-
-  .month-display {
-    font-size: 1.2rem;
-    min-width: 120px;
-  }
-
-  .week-button {
-    min-width: 150px;
+  .app {
+    padding: 10px;
   }
 }

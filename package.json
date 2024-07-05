@@ -18,6 +18,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "netlify": "netlify dev",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

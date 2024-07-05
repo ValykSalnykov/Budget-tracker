@@ -1,43 +1,48 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import '../styles/MonthCarousel.css';
 
-const MonthCarousel = ({ months, selectedMonth, onSelectMonth }) => {
-  const selectedIndex = months.findIndex(month => month.MonthId === selectedMonth);
+const MonthCarousel = React.memo(({ months, selectedMonth, onSelectMonth }) => {
+  const selectedIndex = useMemo(() => 
+    months.findIndex(month => month.MonthId === selectedMonth),
+    [months, selectedMonth]
+  );
 
-  const handlePrevMonth = () => {
+  const handlePrevMonth = useCallback(() => {
     if (selectedIndex > 0) {
       onSelectMonth(months[selectedIndex - 1].MonthId);
     }
-  };
+  }, [selectedIndex, months, onSelectMonth]);
 
-  const handleNextMonth = () => {
+  const handleNextMonth = useCallback(() => {
     if (selectedIndex < months.length - 1) {
       onSelectMonth(months[selectedIndex + 1].MonthId);
     }
-  };
+  }, [selectedIndex, months, onSelectMonth]);
 
   return (
-    <div className="month-carousel">
+    <div className="month-carousel" role="region" aria-label="Month selection">
       <button 
         className="month-nav-button" 
         onClick={handlePrevMonth} 
         disabled={selectedIndex === 0}
+        aria-label="Previous month"
       >
         <ChevronLeft size={24} />
       </button>
-      <div className="month-display">
+      <div className="month-display" aria-live="polite">
         {months[selectedIndex]?.Name || 'Выберите месяц'}
       </div>
       <button 
         className="month-nav-button" 
         onClick={handleNextMonth} 
         disabled={selectedIndex === months.length - 1}
+        aria-label="Next month"
       >
         <ChevronRight size={24} />
       </button>
     </div>
   );
-};
+});
 
 export default MonthCarousel;

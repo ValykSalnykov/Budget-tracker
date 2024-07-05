@@ -11,15 +11,15 @@
   .status-indicator {
     height: 100%;
     width: 100%;
-    background-color: #F44336; /* Красный для отключенного состояния */
+    background-color: #F44336;
   }
   
   .database-status.connected .status-indicator {
-    background-color: #4CAF50; /* Зеленый для подключенного состояния */
+    background-color: #4CAF50;
   }
   
   .database-status.connecting .status-indicator {
-    background-color: #ffd931; /* Желтый для состояния подключения */
+    background-color: #ffd931;
     animation: pulse .3s infinite;
   }
   

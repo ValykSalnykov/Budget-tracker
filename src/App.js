@@ -1,126 +1,98 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import WeekSelector from './components/WeekSelector';
 import DatabaseStatus from './components/DatabaseStatus';
 import './App.css';
-
-const debounce = (func, wait) => {
-  let timeout;
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-};
 
 const App = () => {
   const [months, setMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
   const [weeks, setWeeks] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState(null);
-  const [isLoadingMonths, setIsLoadingMonths] = useState(true);
-  const [isLoadingWeeks, setIsLoadingWeeks] = useState(false);
+  const [isLoading, setIsLoading] = useState({ months: true, weeks: false });
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchMonths = async () => {
-      setIsLoadingMonths(true);
-      setError(null);
-      try {
-        const response = await fetch('/.netlify/functions/get-months');
-        if (!response.ok) {
-          throw new Error('Failed to fetch months');
-        }
-        const data = await response.json();
-        setMonths(data);
-        
-        // Get current month number (1-12)
-        const currentMonth = new Date().getMonth() + 1;
-        
-        // Find the month object that corresponds to the current month
-        const currentMonthData = data.find(month => month.monthNumber === currentMonth);
-        
-        if (currentMonthData) {
-          setSelectedMonth(currentMonthData.MonthId);
-        } else if (data.length > 0) {
-          // Fallback to first month if current month not found
-          setSelectedMonth(data[0].MonthId);
-        }
-      } catch (error) {
-        console.error('Error fetching months:', error);
-        setError('Failed to load months. Please try again later.');
-      } finally {
-        setIsLoadingMonths(false);
-      }
-    };
-
-    fetchMonths();
+  const fetchData = useCallback(async (url, errorMessage) => {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(errorMessage);
+    }
+    return response.json();
   }, []);
 
-  useEffect(() => {
-    const fetchWeeks = async (monthId) => {
-      setIsLoadingWeeks(true);
-      setError(null);
-      try {
-        const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Failed to fetch weeks: ${errorData.error}`);
-        }
-        const data = await response.json();
-        setWeeks(data);
-        setSelectedWeek(data.length > 0 ? data[0].WeeksId : null);
-      } catch (error) {
-        console.error('Error fetching weeks:', error);
-        setError('Failed to load weeks. Please try again later.');
-      } finally {
-        setIsLoadingWeeks(false);
-      }
-    };
-
-    const debouncedFetchWeeks = debounce((monthId) => fetchWeeks(monthId), 100);
-
-    if (selectedMonth) {
-      setWeeks([]); // Clear weeks immediately
-      debouncedFetchWeeks(selectedMonth);
+  const fetchMonths = useCallback(async () => {
+    try {
+      const data = await fetchData('/.netlify/functions/get-months', 'Failed to fetch months');
+      setMonths(data);
+      const currentMonth = new Date().getMonth() + 1;
+      const currentMonthData = data.find(month => month.monthNumber === currentMonth) || data[0];
+      setSelectedMonth(currentMonthData?.MonthId);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(prev => ({ ...prev, months: false }));
     }
+  }, [fetchData]);
 
-    // Cleanup function to cancel any pending debounced calls
-    return () => debouncedFetchWeeks.cancel && debouncedFetchWeeks.cancel();
-  }, [selectedMonth]);
+  const fetchWeeks = useCallback(async (monthId) => {
+    if (!monthId) return;
+    setIsLoading(prev => ({ ...prev, weeks: true }));
+    try {
+      const data = await fetchData(`/.netlify/functions/get-weeks?monthId=${monthId}`, 'Failed to fetch weeks');
+      setWeeks(data);
+      setSelectedWeek(data[0]?.WeeksId);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setIsLoading(prev => ({ ...prev, weeks: false }));
+    }
+  }, [fetchData]);
 
-  const handleMonthSelect = (monthId) => {
+  useEffect(() => {
+    fetchMonths();
+  }, [fetchMonths]);
+
+  useEffect(() => {
+    if (selectedMonth) {
+      fetchWeeks(selectedMonth);
+    }
+  }, [selectedMonth, fetchWeeks]);
+
+  const handleMonthSelect = useCallback((monthId) => {
     setSelectedMonth(monthId);
     setSelectedWeek(null);
-  };
+  }, []);
 
-  const handleWeekSelect = (weekId) => {
+  const handleWeekSelect = useCallback((weekId) => {
     setSelectedWeek(weekId);
-  };
+  }, []);
 
-  if (isLoadingMonths) {
-    return <div className="loading">Загрузка месяцев...</div>;
-  }
-
-  if (error) {
-    return <div className="error">{error}</div>;
-  }
+  const content = useMemo(() => {
+    if (isLoading.months) return <div className="loading">Загрузка месяцев...</div>;
+    if (error) return <div className="error">{error}</div>;
+    return (
+      <>
+        {months.length > 0 && (
+          <MonthCarousel
+            months={months}
+            selectedMonth={selectedMonth}
+            onSelectMonth={handleMonthSelect}
+          />
+        )}
+        <WeekSelector
+          weeks={weeks}
+          selectedWeek={selectedWeek}
+          onSelectWeek={handleWeekSelect}
+          isLoading={isLoading.weeks}
+        />
+      </>
+    );
+  }, [months, selectedMonth, handleMonthSelect, weeks, selectedWeek, handleWeekSelect, isLoading.weeks, isLoading.months, error]);
 
   return (
     <div className="app">
       <DatabaseStatus />
-      {months.length > 0 && (
-        <MonthCarousel
-          months={months}
-          selectedMonth={selectedMonth}
-          onSelectMonth={handleMonthSelect}
-        />
-      )}
-      <WeekSelector
-        weeks={weeks}
-        selectedWeek={selectedWeek}
-        onSelectWeek={handleWeekSelect}
-        isLoading={isLoadingWeeks}
-      />
+      {content}
     </div>
   );
 };
