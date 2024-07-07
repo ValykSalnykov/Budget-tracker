@@ -1,32 +1,64 @@
 .income-list {
-    flex: 1;
-    min-width: 300px;
-    margin: 10px;
-    padding: 20px;
-    background-color: var(--card-background);
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-  }
-  
-  .income-list h2 {
-    margin-bottom: 15px;
-    color: var(--primary-color);
-  }
-  
-  .income-list ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .income-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-  }
-  
-  .income-amount {
-    color: #27ae60;
-    font-weight: bold;
-  }
+  flex: 1;
+  min-width: 300px;
+  margin: 10px;
+  padding: 20px;
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.income-list h2 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+}
+
+.income-list ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.income-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.income-amount {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.add-income {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.add-income input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.add-income button,
+.income-actions button {
+  padding: 8px 12px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.income-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.income-actions button:hover {
+  opacity: 0.8;
+}
