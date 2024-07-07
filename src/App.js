@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MonthCarousel from './components/MonthCarousel';
 import WeekSelector from './components/WeekSelector';
 import DatabaseStatus from './components/DatabaseStatus';
+import BudgetList from './components/BudgetList';
 import './App.css';
 
 const App = () => {
@@ -22,12 +23,16 @@ const App = () => {
 
   const fetchMonths = useCallback(async () => {
     try {
+      console.log('Fetching months...');
       const data = await fetchData('/.netlify/functions/get-months', 'Failed to fetch months');
+      console.log('Fetched months data:', data);
       setMonths(data);
       const currentMonth = new Date().getMonth() + 1;
       const currentMonthData = data.find(month => month.monthNumber === currentMonth) || data[0];
+      console.log('Current month data:', currentMonthData);
       setSelectedMonth(currentMonthData?.MonthId);
     } catch (error) {
+      console.error('Error in fetchMonths:', error);
       setError(error.message);
     } finally {
       setIsLoading(prev => ({ ...prev, months: false }));
@@ -38,15 +43,19 @@ const App = () => {
     if (!monthId) return;
     setIsLoading(prev => ({ ...prev, weeks: true }));
     try {
-      const data = await fetchData(`/.netlify/functions/get-weeks?monthId=${monthId}`, 'Failed to fetch weeks');
+      const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch weeks');
+      }
+      const data = await response.json();
       setWeeks(data);
-      setSelectedWeek(data[0]?.WeeksId);
+      setSelectedWeek(null);
     } catch (error) {
       setError(error.message);
     } finally {
       setIsLoading(prev => ({ ...prev, weeks: false }));
     }
-  }, [fetchData]);
+  }, []);
 
   useEffect(() => {
     fetchMonths();
@@ -63,38 +72,32 @@ const App = () => {
     setSelectedWeek(null);
   }, []);
 
-  const handleWeekSelect = useCallback((weekId) => {
-    setSelectedWeek(weekId);
+  const handleWeekSelect = useCallback((weekIndex) => {
+    console.log('Selected week index:', weekIndex);
+    setSelectedWeek(weekIndex);
   }, []);
-
-  const content = useMemo(() => {
-    if (isLoading.months) return <div className="loading">Загрузка месяцев...</div>;
-    if (error) return <div className="error">{error}</div>;
-    return (
-      <>
-        {months.length > 0 && (
-          <MonthCarousel
-            months={months}
-            selectedMonth={selectedMonth}
-            onSelectMonth={handleMonthSelect}
-          />
-        )}
-        <WeekSelector
-          weeks={weeks}
-          selectedWeek={selectedWeek}
-          onSelectWeek={handleWeekSelect}
-          isLoading={isLoading.weeks}
-        />
-      </>
-    );
-  }, [months, selectedMonth, handleMonthSelect, weeks, selectedWeek, handleWeekSelect, isLoading.weeks, isLoading.months, error]);
 
   return (
     <div className="app">
-      <DatabaseStatus />
-      {content}
+      <DatabaseStatus/>
+      {months.length > 0 && (
+        <MonthCarousel
+          months={months}
+          selectedMonth={selectedMonth}
+          onSelectMonth={handleMonthSelect}
+        />
+      )}
+      <WeekSelector
+        weeks={weeks}
+        selectedWeek={selectedWeek}
+        onSelectWeek={handleWeekSelect}
+        isLoading={isLoading.weeks}
+      />
+      {weeks.length > 0 && selectedWeek !== null && (
+        <BudgetList selectedWeek={selectedWeek} weeks={weeks} />
+      )}
     </div>
   );
-};
+}
 
 export default App;

@@ -1,0 +1,32 @@
+.income-list {
+    flex: 1;
+    min-width: 300px;
+    margin: 10px;
+    padding: 20px;
+    background-color: var(--card-background);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  }
+  
+  .income-list h2 {
+    margin-bottom: 15px;
+    color: var(--primary-color);
+  }
+  
+  .income-list ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .income-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .income-amount {
+    color: #27ae60;
+    font-weight: bold;
+  }
