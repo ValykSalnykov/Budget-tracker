@@ -8,7 +8,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks }) => {
   const [incomeData, setIncomeData] = useState([]);
   const [generalExpensesData, setGeneralExpensesData] = useState([]);
   const [personalExpensesData, setPersonalExpensesData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchIncomeData = useCallback(async (weekId) => {
