@@ -11,7 +11,7 @@ const App = () => {
   const [weeks, setWeeks] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [isLoading, setIsLoading] = useState({ months: true, weeks: false });
-  const [error, setError] = useState(null);
+  const [, setError] = useState(null);
 
   const fetchData = useCallback(async (url, errorMessage) => {
     const response = await fetch(url);
