@@ -4,13 +4,22 @@
   margin: 10px;
   padding: 20px;
   background-color: var(--card-background);
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  transition: all 1s ease;
+}
+
+.income-list:hover {
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+  transform: translateY(-5px);
 }
 
 .income-list h2 {
-  margin-bottom: 15px;
+  margin-bottom: 20px;
+  margin-top: 0px;
   color: var(--primary-color);
+  font-size: 24px;
+  font-weight: 600;
 }
 
 .income-list ul {
@@ -22,43 +31,140 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 0;
+  padding: 15px 0;
   border-bottom: 1px solid #eee;
+  transition: background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.income-item:hover {
+  background-color: rgba(0,0,0,0.02);
 }
 
 .income-amount {
   color: #27ae60;
   font-weight: bold;
+  font-size: 18px;
 }
 
 .add-income {
   display: flex;
-  margin-bottom: 15px;
+  margin-bottom: 20px;
 }
 
-.add-income input {
+.add-income input,
+.editing-container input {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
   margin-right: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.add-income input:focus,
+.editing-container input:focus {
+  outline: none;
+  border-color: var(--primary-color);
 }
 
 .add-income button,
-.income-actions button {
-  padding: 8px 12px;
+.income-actions button,
+.editing-container button {
+  padding: 10px 15px;
   background-color: var(--primary-color);
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.add-income button:hover,
+.income-actions button:hover,
+.editing-container button:hover {
+  background-color: var(--primary-color-dark);
+  box-shadow: 0px 0px 15px 4px rgba(0, 0, 0, 0.15);
+  color: black;
 }
 
 .income-actions {
   display: flex;
-  gap: 5px;
+  gap: 10px;
 }
 
-.income-actions button:hover {
-  opacity: 0.8;
+.income-actions button,
+.editing-container button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.editing-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.editing-container input {
+  flex: 1;
+  margin-right: 43px;
+  height: 8px;
+}
+
+.delete-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+}
+
+.delete-button.confirming {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.delete-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.delete-button:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
 }
