@@ -1,80 +1,178 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/GeneralExpensesList.css';
 
 const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpense, onDeleteExpense }) => {
   const [newExpense, setNewExpense] = useState({ description: '', amount: '' });
-  const [editingId, setEditingId] = useState(null);
-  const [editingExpense, setEditingExpense] = useState({ description: '', amount: '' });
+  const [editingState, setEditingState] = useState({ id: null, description: '', amount: '' });
+  const [deletingId, setDeletingId] = useState(null);
+  const [isReturning, setIsReturning] = useState(false);
+  const deleteTimerRef = useRef(null);
 
-  const handleAddExpense = () => {
-    if (newExpense.description && newExpense.amount && !isNaN(newExpense.amount)) {
-      onAddExpense(newExpense.description, parseFloat(newExpense.amount));
+  const handleAddExpense = useCallback(() => {
+    const amount = parseFloat(newExpense.amount);
+    if (newExpense.description && amount && !isNaN(amount)) {
+      onAddExpense(newExpense.description, amount);
       setNewExpense({ description: '', amount: '' });
     }
-  };
+  }, [newExpense, onAddExpense]);
 
-  const handleUpdateExpense = (id) => {
-    if (editingExpense.description && editingExpense.amount && !isNaN(editingExpense.amount)) {
-      onUpdateExpense(id, editingExpense.description, parseFloat(editingExpense.amount));
-      setEditingId(null);
-      setEditingExpense({ description: '', amount: '' });
+  const handleUpdateExpense = useCallback(() => {
+    const amount = parseFloat(editingState.amount);
+    if (editingState.description && amount && !isNaN(amount)) {
+      onUpdateExpense(editingState.id, editingState.description, amount);
+      setEditingState({ id: null, description: '', amount: '' });
     }
-  };
+  }, [editingState, onUpdateExpense]);
 
-  const startEditing = (expense) => {
-    setEditingId(expense.GeneralExpensesId);
-    setEditingExpense({ description: expense.Description, amount: expense.Amount.toString() });
-  };
+  const startEditing = useCallback((expense) => {
+    setEditingState({
+      id: expense.GeneralExpensesId,
+      description: expense.Description,
+      amount: expense.Amount.toString()
+    });
+  }, []);
+
+  const cancelEditing = useCallback(() => {
+    setEditingState({ id: null, description: '', amount: '' });
+  }, []);
+
+  const handleDeleteClick = useCallback((id) => {
+    if (deletingId === id) {
+      onDeleteExpense(id);
+      setDeletingId(null);
+      clearTimeout(deleteTimerRef.current);
+    } else {
+      clearTimeout(deleteTimerRef.current);
+      setDeletingId(id);
+    }
+  }, [deletingId, onDeleteExpense]);
+
+  const cancelDeleting = useCallback(() => {
+    setIsReturning(true);
+    deleteTimerRef.current = setTimeout(() => {
+      setDeletingId(null);
+      setIsReturning(false);
+    }, 2000);
+  }, []);
+
+  const renderExpenseItem = useCallback((expense) => (
+    <>
+      <span className="expense-description">
+        {editingState.id === expense.GeneralExpensesId ? (
+          <input
+            type="text"
+            value={editingState.description}
+            onChange={(e) => setEditingState(prev => ({ ...prev, description: e.target.value }))}
+            className="editing-input"
+          />
+        ) : (
+          expense.Description
+        )}
+      </span>
+      <span className="expense-amount">
+        {editingState.id === expense.GeneralExpensesId ? (
+          <input
+            type="number"
+            value={editingState.amount}
+            onChange={(e) => setEditingState(prev => ({ ...prev, amount: e.target.value }))}
+            className="editing-input"
+          />
+        ) : (
+          `${expense.Amount.toFixed()} ₴`
+        )}
+      </span>
+      <div className="expense-actions">
+        {editingState.id === expense.GeneralExpensesId ? (
+          <>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={handleUpdateExpense}>
+              <FaSave />
+            </motion.button>
+            <motion.button whileTap={{ scale: 0.95 }} onClick={cancelEditing}>
+              <FaTimes />
+            </motion.button>
+          </>
+        ) : (
+          <motion.button whileTap={{ scale: 0.95 }} onClick={() => startEditing(expense)}>
+            <FaEdit />
+          </motion.button>
+        )}
+        <AnimatePresence>
+          {deletingId === expense.GeneralExpensesId ? (
+            <motion.button
+              key="confirm"
+              className="delete-button confirming"
+              whileTap={{ scale: 0.97 }}
+              initial={{ width: 'auto', backgroundColor: 'var(--primary-color)' }}
+              animate={{ width: '100%', backgroundColor: '#ff4d4d' }}
+              exit={{ width: 0, height: '100%', backgroundColor: 'var(--primary-color)', zIndex: '1' }}
+              transition={{ duration: 0.2, ease: 'linear' }}
+              onClick={() => handleDeleteClick(expense.GeneralExpensesId)}
+              onMouseLeave={cancelDeleting}
+              onMouseEnter={() => clearTimeout(deleteTimerRef.current)}
+            >
+              Вы уверены?
+            </motion.button>
+          ) : (
+            <motion.button
+              key="delete"
+              className="delete-button"
+              initial={isReturning ? { width: '100%', backgroundColor: '#ff4d4d' } : {}}
+              animate={{ width: 'auto', backgroundColor: 'var(--primary-color)' }}
+              transition={{ duration: 0.85 }}
+              onClick={() => handleDeleteClick(expense.GeneralExpensesId)}
+            >
+              <FaTrash />
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+    </>
+  ), [editingState, handleUpdateExpense, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
   return (
-    <div className="general-expenses-list">
+    <motion.div 
+      className="general-expenses-list"
+      initial={{ opacity: 0, y: 15 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <h2>Основные расходы</h2>
       <div className="add-expense">
         <input
           type="text"
           value={newExpense.description}
-          onChange={(e) => setNewExpense({ ...newExpense, description: e.target.value })}
-          placeholder="Описание"
+          onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
+          placeholder="Описание расхода"
         />
         <input
           type="number"
           value={newExpense.amount}
-          onChange={(e) => setNewExpense({ ...newExpense, amount: e.target.value })}
-          placeholder="Сумма"
+          onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
+          placeholder="Сумма расхода"
         />
-        <button onClick={handleAddExpense}>Добавить</button>
+        <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddExpense}>
+          <FaPlus />
+        </motion.button>
       </div>
       <ul>
-        {expenses.map(expense => (
-          <li key={expense.GeneralExpensesId} className="expense-item">
-            {editingId === expense.GeneralExpensesId ? (
-              <>
-                <input
-                  type="text"
-                  value={editingExpense.description}
-                  onChange={(e) => setEditingExpense({ ...editingExpense, description: e.target.value })}
-                />
-                <input
-                  type="number"
-                  value={editingExpense.amount}
-                  onChange={(e) => setEditingExpense({ ...editingExpense, amount: e.target.value })}
-                />
-                <button onClick={() => handleUpdateExpense(expense.GeneralExpensesId)}>Сохранить</button>
-              </>
-            ) : (
-              <>
-                <span className="expense-description">{expense.Description}</span>
-                <span className="expense-amount">{expense.Amount} ₴</span>
-                <div className="expense-actions">
-                  <button onClick={() => startEditing(expense)}>Изменить</button>
-                  <button onClick={() => onDeleteExpense(expense.GeneralExpensesId)}>Удалить</button>
-                </div>
-              </>
-            )}
-          </li>
-        ))}
+        <AnimatePresence>
+          {expenses.map(expense => (
+            <motion.li
+              key={expense.GeneralExpensesId}
+              className="expense-item"
+              initial={{ opacity: 0, x: -15 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 15 }}
+              transition={{ duration: 0.75 }}
+            >
+              {renderExpenseItem(expense)}
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
-    </div>
+    </motion.div>
   );
 });
 

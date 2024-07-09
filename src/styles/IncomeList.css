@@ -1,6 +1,6 @@
 .income-list {
   flex: 1;
-  min-width: 300px;
+  min-width: 150px;
   margin: 10px;
   padding: 20px;
   background-color: var(--card-background);
@@ -46,6 +46,23 @@
   color: #27ae60;
   font-weight: bold;
   font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
+.income-amount .editing-input {
+  width: 100%;
+  padding: 5px;
+  margin-right: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.income-amount .editing-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
 }
 
 .add-income {
@@ -53,9 +70,9 @@
   margin-bottom: 20px;
 }
 
-.add-income input,
-.editing-container input {
+.add-income input {
   flex: 1;
+  width: 100%;
   padding: 10px;
   margin-right: 10px;
   border: 2px solid #ddd;
@@ -64,15 +81,13 @@
   transition: border-color 0.3s ease;
 }
 
-.add-income input:focus,
-.editing-container input:focus {
+.add-income input:focus {
   outline: none;
   border-color: var(--primary-color);
 }
 
 .add-income button,
-.income-actions button,
-.editing-container button {
+.income-actions button {
   padding: 10px 15px;
   background-color: var(--primary-color);
   color: white;
@@ -87,8 +102,7 @@
 }
 
 .add-income button:hover,
-.income-actions button:hover,
-.editing-container button:hover {
+.income-actions button:hover {
   background-color: var(--primary-color-dark);
   box-shadow: 0px 0px 15px 4px rgba(0, 0, 0, 0.15);
   color: black;
@@ -99,29 +113,15 @@
   gap: 10px;
 }
 
-.income-actions button,
-.editing-container button {
+.income-actions button {
   padding: 8px;
   font-size: 14px;
-}
-
-.editing-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.editing-container input {
-  flex: 1;
-  margin-right: 43px;
-  height: 8px;
 }
 
 .delete-button {
   position: relative;
   overflow: hidden;
   transition: all 0.3s ease;
-  
 }
 
 .delete-button.confirming {
@@ -134,4 +134,5 @@
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
+  opacity: 1;
 }
