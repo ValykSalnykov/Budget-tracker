@@ -81,16 +81,26 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
             <motion.button
               key="confirm"
               className="delete-button confirming"
-              initial={{ width: 'auto', backgroundColor: 'var(--primary-color)' }}
+              initial={{ 
+                width: 'auto',
+                backgroundColor: 'var(--primary-color)' }}
               animate={{
                 width: '100%',
                 backgroundColor: '#ff4d4d',
               }}
               exit={{
-                width: 'auto',
+                width: '14%',
+                height: '80%',
                 backgroundColor: 'var(--primary-color)',
+                zIndex: '1',
+                fontSize: '1px',
+                visibility: 'hidden',
+                top: 'auto',
+                bottom: 'auto',
               }}
-              transition={{ duration: 0.3 }}
+              transition={{
+                duration: .5
+              }}
               onClick={() => handleDeleteClick(income.IncomeId)}
               onMouseLeave={cancelDeleting}
               onMouseEnter={() => clearTimeout(deleteTimerRef.current)}
