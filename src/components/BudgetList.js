@@ -260,18 +260,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
 
   return (
     <div className="budget-container">
-      <AnimatePresence>
-        <motion.div
-          key={selectedWeek}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="summary-container"
-        >
-          <ResidueSummary selectedMonth={selectedMonth} selectedWeek={selectedWeek} weeks={weeks} />
-        </motion.div>
-      </AnimatePresence>
+      <ResidueSummary selectedMonth={selectedMonth} selectedWeek={selectedWeek} weeks={weeks} />
       <div className="lists-container">
         <div className="list-column">
           <IncomeList 

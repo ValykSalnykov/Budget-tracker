@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect  } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/IncomeList.css';
@@ -9,7 +9,18 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
   const [deletingId, setDeletingId] = useState(null);
   const [isReturning, setIsReturning] = useState(false);
   const deleteTimerRef = useRef(null);
+  const [isChanging, setIsChanging] = useState(false);
+  const prevIncomesRef = useRef(incomes);
 
+  useEffect(() => {
+    if (JSON.stringify(prevIncomesRef.current) !== JSON.stringify(incomes)) {
+      setIsChanging(true);
+      const timer = setTimeout(() => setIsChanging(false), 300); // Adjust timing as needed
+      return () => clearTimeout(timer);
+    }
+    prevIncomesRef.current = incomes;
+  }, [incomes]);
+  
   const handleAddIncome = useCallback(() => {
     const amount = parseFloat(newIncome);
     if (amount && !isNaN(amount)) {
@@ -115,6 +126,31 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     </>
   ), [editingState, handleUpdateIncome, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
+  const listVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    },
+    exit: { 
+      opacity: 0,
+      transition: { 
+        when: "afterChildren",
+        staggerChildren: 0.05,
+        staggerDirection: -1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
+
   return (
     <motion.div 
       className="income-list"
@@ -134,18 +170,29 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
           <FaPlus />
         </motion.button>
       </div>
-      <ul>
-        <AnimatePresence>
-          {incomes.map(income => (
-            <motion.li
-              key={income.IncomeId}
-              className="income-item"
+      <div className="income-list-container">
+        <AnimatePresence mode="wait">
+          {!isChanging && (
+            <motion.ul
+              key={JSON.stringify(incomes)}
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
-              {renderIncomeItem(income)}
-            </motion.li>
-          ))}
+              {incomes.map(income => (
+                <motion.li 
+                  key={income.IncomeId}
+                  className="income-item"
+                  variants={itemVariants}
+                >
+                  {renderIncomeItem(income)}
+                </motion.li>
+              ))}
+            </motion.ul>
+          )}
         </AnimatePresence>
-      </ul>
+      </div>
     </motion.div>
   );
 });

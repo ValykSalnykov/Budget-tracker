@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useEffect  } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/GeneralExpensesList.css';
@@ -9,6 +9,17 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
   const [deletingId, setDeletingId] = useState(null);
   const [isReturning, setIsReturning] = useState(false);
   const deleteTimerRef = useRef(null);
+  const [isChanging, setIsChanging] = useState(false);
+  const prevExpensesRef = useRef(expenses);
+
+  useEffect(() => {
+    if (JSON.stringify(prevExpensesRef.current) !== JSON.stringify(expenses)) {
+      setIsChanging(true);
+      const timer = setTimeout(() => setIsChanging(false), 300); // Adjust timing as needed
+      return () => clearTimeout(timer);
+    }
+    prevExpensesRef.current = expenses;
+  }, [expenses]);
 
   const handleAddExpense = useCallback(() => {
     const amount = parseFloat(newExpense.amount);
@@ -131,6 +142,31 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     </>
   ), [editingState, handleUpdateExpense, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
+  const listVariants = {
+    hidden: { opacity: 0 },
+    visible: { 
+      opacity: 1,
+      transition: { 
+        when: "beforeChildren",
+        staggerChildren: 0.1
+      }
+    },
+    exit: { 
+      opacity: 0,
+      transition: { 
+        when: "afterChildren",
+        staggerChildren: 0.05,
+        staggerDirection: -1
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+    exit: { opacity: 0, y: -20 }
+  };
+
   return (
     <motion.div 
       className="general-expenses-list"
@@ -156,18 +192,32 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
           <FaPlus />
         </motion.button>
       </div>
-      <ul>
-        <AnimatePresence>
-          {expenses.map(expense => (
-            <motion.li
-              key={expense.GeneralExpensesId}
-              className="expense-item"
+      <div className="general-expenses-list-container">
+        <AnimatePresence mode="wait">
+          {!isChanging && (
+            <motion.ul
+              key={JSON.stringify(expenses)}
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
             >
-              {renderExpenseItem(expense)}
-            </motion.li>
-          ))}
+              {expenses.map(expense => (
+                <motion.li
+                key={expense.GeneralExpensesId}
+                className="expense-item"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.2 }}
+                >
+                  {renderExpenseItem(expense)}
+                </motion.li>
+              ))}
+            </motion.ul>
+          )}
         </AnimatePresence>
-      </ul>
+      </div>
     </motion.div>
   );
 });
