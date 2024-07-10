@@ -120,7 +120,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
       className="income-list"
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
     >
       <h2>Доходы</h2>
       <div className="add-income">
@@ -140,10 +140,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
             <motion.li
               key={income.IncomeId}
               className="income-item"
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 15 }}
-              transition={{ duration: 0.75 }}
             >
               {renderIncomeItem(income)}
             </motion.li>

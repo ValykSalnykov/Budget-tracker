@@ -134,9 +134,9 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
   return (
     <motion.div 
       className="general-expenses-list"
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
+      transition={{ duration: 0.2 }}
     >
       <h2>Основные расходы</h2>
       <div className="add-expense">
@@ -162,10 +162,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
             <motion.li
               key={expense.GeneralExpensesId}
               className="expense-item"
-              initial={{ opacity: 0, x: -15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 15 }}
-              transition={{ duration: 0.75 }}
             >
               {renderExpenseItem(expense)}
             </motion.li>

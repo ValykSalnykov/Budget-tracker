@@ -1,6 +1,7 @@
 .income-list {
   flex: 1;
   min-width: 150px;
+  max-width: 250px;
   margin: 10px;
   padding: 20px;
   background-color: var(--card-background);

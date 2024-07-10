@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import IncomeList from './IncomeList';
 import GeneralExpensesList from './GeneralExpensesList';
 import PersonalExpensesList from './PersonalExpensesList';
+import WeeklySummary from './WeeklySummary';
+import ResidueSummary from './ResidueSummary';
+import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/BudgetList.css';
 
-const BudgetList = React.memo(({ selectedWeek, weeks }) => {
+const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
   const [incomeData, setIncomeData] = useState([]);
   const [generalExpensesData, setGeneralExpensesData] = useState([]);
   const [personalExpensesData, setPersonalExpensesData] = useState([]);
@@ -256,25 +259,46 @@ const BudgetList = React.memo(({ selectedWeek, weeks }) => {
   }
 
   return (
-    <div className="budget-list">
-      <IncomeList 
-        incomes={incomeData} 
-        onAddIncome={handleAddIncome}
-        onUpdateIncome={handleUpdateIncome}
-        onDeleteIncome={handleDeleteIncome}
-      />
-      <GeneralExpensesList 
-        expenses={generalExpensesData}
-        onAddExpense={handleAddGeneralExpense}
-        onUpdateExpense={handleUpdateGeneralExpense}
-        onDeleteExpense={handleDeleteGeneralExpense}
-      />
-      <PersonalExpensesList 
-        expenses={personalExpensesData}
-        onAddExpense={handleAddPersonalExpense}
-        onUpdateExpense={handleUpdatePersonalExpense}
-        onDeleteExpense={handleDeletePersonalExpense}
-      />
+    <div className="budget-container">
+      <AnimatePresence>
+        <motion.div
+          key={selectedWeek}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="summary-container"
+        >
+          <ResidueSummary selectedMonth={selectedMonth} selectedWeek={selectedWeek} weeks={weeks} />
+        </motion.div>
+      </AnimatePresence>
+      <div className="lists-container">
+        <div className="list-column">
+          <IncomeList 
+            incomes={incomeData} 
+            onAddIncome={handleAddIncome}
+            onUpdateIncome={handleUpdateIncome}
+            onDeleteIncome={handleDeleteIncome}
+          />
+        </div>
+        <div className="list-column">
+          <GeneralExpensesList 
+            expenses={generalExpensesData}
+            onAddExpense={handleAddGeneralExpense}
+            onUpdateExpense={handleUpdateGeneralExpense}
+            onDeleteExpense={handleDeleteGeneralExpense}
+          />
+        </div>
+        <div className="list-column">
+          <PersonalExpensesList 
+            expenses={personalExpensesData}
+            onAddExpense={handleAddPersonalExpense}
+            onUpdateExpense={handleUpdatePersonalExpense}
+            onDeleteExpense={handleDeletePersonalExpense}
+          />
+        </div>
+      </div>
+      <WeeklySummary selectedWeek={selectedWeek} weeks={weeks} />
     </div>
   );
 });

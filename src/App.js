@@ -94,7 +94,7 @@ const App = () => {
         isLoading={isLoading.weeks}
       />
       {weeks.length > 0 && selectedWeek !== null && (
-        <BudgetList selectedWeek={selectedWeek} weeks={weeks} />
+        <BudgetList selectedWeek={selectedWeek} weeks={weeks} selectedMonth={selectedMonth}/>
       )}
     </div>
   );

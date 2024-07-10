@@ -1,6 +1,7 @@
 .personal-expenses-list {
   flex: 1;
   min-width: 400px;
+  max-width: 400px;
   margin: 10px;
   padding: 20px;
   background-color: var(--card-background);
