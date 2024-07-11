@@ -180,13 +180,13 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
           type="text"
           value={newExpense.description}
           onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
-          placeholder="Описание расхода"
+          placeholder="Описание"
         />
         <input
           type="number"
           value={newExpense.amount}
           onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
-          placeholder="Сумма расхода"
+          placeholder="Сумма"
         />
         <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddExpense}>
           <FaPlus />
@@ -206,6 +206,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
                 <motion.li
                 key={expense.GeneralExpensesId}
                 className="expense-item"
+                //variants={itemVariants}
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}

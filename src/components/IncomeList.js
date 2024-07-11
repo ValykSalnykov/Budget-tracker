@@ -154,7 +154,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
   return (
     <motion.div 
       className="income-list"
-      initial={{ opacity: 0, y: 15 }}
+      initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
     >
@@ -164,7 +164,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
           type="number"
           value={newIncome}
           onChange={(e) => setNewIncome(e.target.value)}
-          placeholder="Сумма дохода"
+          placeholder="Сумма"
         />
         <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddIncome}>
           <FaPlus />
@@ -184,7 +184,11 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
                 <motion.li 
                   key={income.IncomeId}
                   className="income-item"
-                  variants={itemVariants}
+                  //variants={itemVariants}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.2 }}
                 >
                   {renderIncomeItem(income)}
                 </motion.li>

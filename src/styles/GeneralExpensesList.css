@@ -1,6 +1,7 @@
 .general-expenses-list {
   flex: 1;
   min-width: 400px;
+  max-width: 400px;
   margin: 10px;
   padding: 20px;
   background-color: var(--card-background);
@@ -28,6 +29,7 @@
   list-style-type: none;
   padding: 0;
   margin: 0;
+  overflow-y: hidden;
 }
 
 .expense-item {
@@ -37,6 +39,8 @@
   padding: 15px 0;
   border-bottom: 1px solid #eee;
   transition: background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .expense-item:last-child {
@@ -146,6 +150,7 @@
   justify-content: center;
   font-size: 16px;
   font-weight: bold;
+  opacity: 1;
 }
 
 .delete-button.confirming:hover {
