@@ -59,32 +59,28 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
 
   return (
     <motion.div
-      className="residue-summary"
-      // animate={{ opacity: 1 }}
-      // transition={{ duration: 0.2 }}
+      className="residue-container"
     >
-      <div className="summary-content">
-        <motion.div 
-          className="summary-item"
-          key={monthlyResidue}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h3>Остаток месяца: </h3>
-          <span> {monthlyResidue}</span>
-        </motion.div>
-        <motion.div 
-          className="summary-item"
-          key={weeklyResidue}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h3>Остаток недели: </h3>
-          <span> {weeklyResidue}</span>
-        </motion.div>
-      </div>
+      <motion.div 
+        className="residue-summary-item"
+        key={monthlyResidue}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h3>Остаток месяца: </h3>
+        <span> {monthlyResidue}</span>
+      </motion.div>
+      <motion.div 
+        className="residue-summary-item"
+        key={weeklyResidue}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h3>Остаток недели:  </h3>
+        <span>{weeklyResidue}</span>
+      </motion.div>
     </motion.div>
   );
 };

@@ -36,22 +36,38 @@ const WeeklySummary = ({ selectedWeek, weeks }) => {
   }
 
   return (
-    <div className="weekly-summary">
-      <div className="summary-content">
-        <div className="summary-item" >
-          <span>Итого доходов</span>
+    <motion.div className="weekly-container">
+        <motion.div
+          className="weekly-summary-item"
+          key={summary.IncomeSum}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3>Итого доходов: </h3>
           <span>{summary.IncomeSum}</span>
-        </div>
-        <div className="summary-item">
-          <span>Итого основных расходов</span>
+        </motion.div>
+        <motion.div
+          className="weekly-summary-item"
+          key={summary.GeneralExpensesSum}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3>Итого основных расходов: </h3>
           <span>{summary.GeneralExpensesSum}</span>
-        </div>
-        <div className="summary-item">
-          <span>Итого личных расходов</span>
+        </motion.div>
+        <motion.div
+          className="weekly-summary-item"
+          key={summary.PersonalExpensesSum}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h3>Итого личных расходов: </h3>
           <span>{summary.PersonalExpensesSum}</span>
-        </div>
-      </div>
-    </div>
+        </motion.div>
+    </motion.div>
   );
 };
 
