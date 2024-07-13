@@ -4,7 +4,6 @@ import GeneralExpensesList from './GeneralExpensesList';
 import PersonalExpensesList from './PersonalExpensesList';
 import WeeklySummary from './WeeklySummary';
 import ResidueSummary from './ResidueSummary';
-import { motion, AnimatePresence } from 'framer-motion';
 import '../styles/BudgetList.css';
 
 const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
@@ -13,6 +12,11 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
   const [personalExpensesData, setPersonalExpensesData] = useState([]);
   const [, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [updateTrigger, setUpdateTrigger] = useState(0);
+
+  const triggerUpdate = useCallback(() => {
+    setUpdateTrigger(prev => prev + 1);
+  }, []);
 
   const fetchIncomeData = useCallback(async (weekId) => {
     try {
@@ -96,29 +100,35 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
         throw new Error('Failed to add general expense');
       }
       await fetchGeneralExpensesData(weekId);
+      triggerUpdate();
     } catch (err) {
       setError('Error adding general expense');
       console.error('Error adding general expense:', err);
     }
-  }, [weeks, selectedWeek, fetchGeneralExpensesData]);
+  }, [weeks, selectedWeek, fetchGeneralExpensesData, triggerUpdate]);
 
   const handleUpdateGeneralExpense = useCallback(async (id, description, amount) => {
     try {
-      const response = await fetch('/.netlify/functions/update-general-expense', {
-        method: 'PUT',
-        body: JSON.stringify({ id, description, amount }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update general expense');
-      }
       if (weeks && selectedWeek !== null) {
-        await fetchGeneralExpensesData(weeks[selectedWeek].WeeksId);
+        const weekId = weeks[selectedWeek].WeeksId;
+        const response = await fetch('/.netlify/functions/update-general-expense', {
+          method: 'PUT',
+          body: JSON.stringify({ id, description, amount, weekId }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to update general expense');
+        }
+        await fetchGeneralExpensesData(weekId);
+        triggerUpdate();
+      } else {
+        throw new Error('No week selected');
       }
     } catch (err) {
-      setError('Error updating general expense');
+      setError(err.message);
       console.error('Error updating general expense:', err);
     }
-  }, [weeks, selectedWeek, fetchGeneralExpensesData]);
+  }, [weeks, selectedWeek, fetchGeneralExpensesData, triggerUpdate]);
 
   const handleDeleteGeneralExpense = useCallback(async (id) => {
     try {
@@ -131,12 +141,13 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
       }
       if (weeks && selectedWeek !== null) {
         await fetchGeneralExpensesData(weeks[selectedWeek].WeeksId);
+        triggerUpdate();
       }
     } catch (err) {
       setError('Error deleting general expense');
       console.error('Error deleting general expense:', err);
     }
-  }, [weeks, selectedWeek, fetchGeneralExpensesData]);
+  }, [weeks, selectedWeek, fetchGeneralExpensesData, triggerUpdate]);
 
   const handleAddPersonalExpense = useCallback(async (description, amount) => {
     if (!weeks || selectedWeek === null) return;
@@ -150,29 +161,32 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
         throw new Error('Failed to add personal expense');
       }
       await fetchPersonalExpensesData(weekId);
+      triggerUpdate();
     } catch (err) {
       setError('Error adding personal expense');
       console.error('Error adding personal expense:', err);
     }
-  }, [weeks, selectedWeek, fetchPersonalExpensesData]);
+  }, [weeks, selectedWeek, fetchPersonalExpensesData, triggerUpdate]);
 
   const handleUpdatePersonalExpense = useCallback(async (id, description, amount) => {
     try {
-      const response = await fetch('/.netlify/functions/update-personal-expense', {
-        method: 'PUT',
-        body: JSON.stringify({ id, description, amount }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update personal expense');
-      }
       if (weeks && selectedWeek !== null) {
-        await fetchPersonalExpensesData(weeks[selectedWeek].WeeksId);
+        const weekId = weeks[selectedWeek].WeeksId;
+        const response = await fetch('/.netlify/functions/update-personal-expense', {
+          method: 'PUT',
+          body: JSON.stringify({ id, description, amount, weekId }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update personal expense');
+        }
+        await fetchPersonalExpensesData(weekId);
+        triggerUpdate();
       }
     } catch (err) {
       setError('Error updating personal expense');
       console.error('Error updating personal expense:', err);
     }
-  }, [weeks, selectedWeek, fetchPersonalExpensesData]);
+  }, [weeks, selectedWeek, fetchPersonalExpensesData, triggerUpdate]);
 
   const handleDeletePersonalExpense = useCallback(async (id) => {
     try {
@@ -185,12 +199,13 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
       }
       if (weeks && selectedWeek !== null) {
         await fetchPersonalExpensesData(weeks[selectedWeek].WeeksId);
+        triggerUpdate();
       }
     } catch (err) {
       setError('Error deleting personal expense');
       console.error('Error deleting personal expense:', err);
     }
-  }, [weeks, selectedWeek, fetchPersonalExpensesData]);
+  }, [weeks, selectedWeek, fetchPersonalExpensesData, triggerUpdate]);
 
   const handleAddIncome = useCallback(async (amount) => {
     if (!weeks || selectedWeek === null) return;
@@ -204,29 +219,32 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
         throw new Error('Failed to add income');
       }
       await fetchIncomeData(weekId);
+      triggerUpdate();
     } catch (err) {
       setError('Error adding income');
       console.error('Error adding income:', err);
     }
-  }, [weeks, selectedWeek, fetchIncomeData]);
+  }, [weeks, selectedWeek, fetchIncomeData, triggerUpdate]);
 
   const handleUpdateIncome = useCallback(async (id, amount) => {
     try {
-      const response = await fetch('/.netlify/functions/update-income', {
-        method: 'PUT',
-        body: JSON.stringify({ id, amount }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to update income');
-      }
       if (weeks && selectedWeek !== null) {
-        await fetchIncomeData(weeks[selectedWeek].WeeksId);
+        const weekId = weeks[selectedWeek].WeeksId;
+        const response = await fetch('/.netlify/functions/update-income', {
+          method: 'PUT',
+          body: JSON.stringify({ id, amount, weekId }),
+        });
+        if (!response.ok) {
+          throw new Error('Failed to update income');
+        }
+        await fetchIncomeData(weekId);
+        triggerUpdate();
       }
     } catch (err) {
       setError('Error updating income');
       console.error('Error updating income:', err);
     }
-  }, [weeks, selectedWeek, fetchIncomeData]);
+  }, [weeks, selectedWeek, fetchIncomeData, triggerUpdate]);
 
   const handleDeleteIncome = useCallback(async (id) => {
     try {
@@ -239,12 +257,13 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
       }
       if (weeks && selectedWeek !== null) {
         await fetchIncomeData(weeks[selectedWeek].WeeksId);
+        triggerUpdate();
       }
     } catch (err) {
       setError('Error deleting income');
       console.error('Error deleting income:', err);
     }
-  }, [weeks, selectedWeek, fetchIncomeData]);
+  }, [weeks, selectedWeek, fetchIncomeData, triggerUpdate]);
 
   if (!weeks || weeks.length === 0) {
     return <div>Нет доступных недель для выбора.</div>;
@@ -287,7 +306,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
           />
         </div>
       </div>
-      <WeeklySummary selectedWeek={selectedWeek} weeks={weeks} />
+      <WeeklySummary selectedWeek={selectedWeek} weeks={weeks} triggerUpdate={updateTrigger}/>
     </div>
   );
 });

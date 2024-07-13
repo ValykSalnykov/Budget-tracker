@@ -2,33 +2,47 @@ const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {
   if (event.httpMethod !== 'PUT') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
   }
 
-  const { id, description, amount } = JSON.parse(event.body);
+  let { id, description, amount, weekId } = JSON.parse(event.body);
 
-  if (!id || !description || !amount) {
+  // Проверка и преобразование типов данных
+  id = parseInt(id);
+  amount = parseFloat(amount);
+  weekId = parseInt(weekId);
+
+  if (!id || !description || isNaN(amount) || !weekId) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'ID, Description, and Amount are required' }),
+      body: JSON.stringify({ 
+        error: 'Invalid input data',
+        details: {
+          id: id ? 'valid' : 'missing or invalid',
+          description: description ? 'valid' : 'missing',
+          amount: isNaN(amount) ? 'invalid' : 'valid',
+          weekId: weekId ? 'valid' : 'missing or invalid'
+        }
+      }),
     };
   }
 
   try {
+    // Вызываем хранимую процедуру для обновления общих расходов
     await executeQuery(
-      'UPDATE General_expenses SET Description = ?, Amount = ? WHERE GeneralExpensesId = ?',
-      [description, amount, id]
+      'CALL UpdateGeneralExpense(?, ?, ?, ?)',
+      [id, weekId, amount, description]
     );
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ id, description, amount }),
+      body: JSON.stringify({ id, description, amount, weekId }),
     };
   } catch (error) {
     console.error('Error updating general expense:', error);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to update general expense' }),
+      body: JSON.stringify({ error: 'Failed to update general expense', details: error.message }),
     };
   }
 };

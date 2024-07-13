@@ -15,10 +15,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    await executeQuery(
-      'DELETE FROM General_expenses WHERE GeneralExpensesId = ?',
-      [id]
-    );
+    // Вызываем хранимую процедуру для удаления общих расходов
+    await executeQuery('CALL DeleteGeneralExpense(?)', [id]);
 
     return {
       statusCode: 200,
