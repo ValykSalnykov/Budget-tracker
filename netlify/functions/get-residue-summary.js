@@ -12,10 +12,9 @@ exports.handler = async function(event, context) {
 
   try {
     const query = `
-      SELECT MonthId, SUM(Residue) AS TotalResidue 
+      SELECT MonthId, MonthlyResidue
       FROM monthly_residue_view
       WHERE MonthId = ?
-      GROUP BY MonthId
     `;
     const rows = await executeQuery(query, [monthId]);
 
