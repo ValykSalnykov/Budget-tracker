@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect } from 'react';
 import '../styles/WeekSelector.css';
 
 const formatDate = (dateString) => {
@@ -16,12 +16,28 @@ const WeekSelector = React.memo(({ weeks, selectedWeek, onSelectWeek, isLoading 
     [weeks]
   );
 
+  useEffect(() => {
+    if (weeks.length > 0 && selectedWeek === null) {
+      const today = new Date();
+      const currentWeekIndex = weeks.findIndex(week => 
+        today >= new Date(week.firstWeekDay) && today <= new Date(week.lastWeekDay)
+      );
+      
+      if (currentWeekIndex !== -1) {
+        onSelectWeek(currentWeekIndex);
+      } else {
+        // If current week is not found, select the last week
+        onSelectWeek(weeks.length - 1);
+      }
+    }
+  }, [weeks, selectedWeek, onSelectWeek]);
+
   if (isLoading) {
-    return <div className="loading" aria-live="polite"></div>;
+    return <div className="loading" aria-live="polite">Загрузка...</div>;
   }
 
   if (weeks.length === 0) {
-    return <div className="no-weeks" aria-live="polite"></div>;
+    return <div className="no-weeks" aria-live="polite">Нет доступных недель</div>;
   }
 
   return (

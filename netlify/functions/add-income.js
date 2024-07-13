@@ -16,14 +16,18 @@ exports.handler = async (event) => {
 
   try {
     const result = await executeQuery(
-      'INSERT INTO Income (Amount, Week) VALUES (?, ?)',
-      [amount, weekId]
+      'CALL InsertIncome(?, ?)',
+      [weekId, amount]
     );
 
-    return {
-      statusCode: 201,
-      body: JSON.stringify({ id: result.insertId, amount, weekId }),
-    };
+    if (result && result.affectedRows > 0) {
+      return {
+        statusCode: 201,
+        body: JSON.stringify({ success: true, amount, weekId }),
+      };
+    } else {
+      throw new Error('Failed to insert income');
+    }
   } catch (error) {
     console.error('Error adding income:', error);
     return {

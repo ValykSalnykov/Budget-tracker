@@ -15,10 +15,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    await executeQuery(
-      'DELETE FROM Personal_expenses WHERE PersonalExpensesId = ?',
-      [id]
-    );
+    await executeQuery('CALL DeletePersonalExpense(?)', [id]);
 
     return {
       statusCode: 200,

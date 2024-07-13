@@ -5,24 +5,24 @@ exports.handler = async (event) => {
     return { statusCode: 405, body: 'Method Not Allowed' };
   }
 
-  const { id, amount } = JSON.parse(event.body);
+  const { id, amount, weekId } = JSON.parse(event.body);
 
-  if (!id || !amount) {
+  if (!id || !amount || !weekId) {
     return {
       statusCode: 400,
-      body: JSON.stringify({ error: 'Income ID and Amount are required' }),
+      body: JSON.stringify({ error: 'ID, Amount, and Week ID are required' }),
     };
   }
 
   try {
     await executeQuery(
-      'UPDATE Income SET Amount = ? WHERE IncomeId = ?',
-      [amount, id]
+      'CALL UpdateIncome(?, ?, ?)',
+      [id, weekId, amount]
     );
 
     return {
       statusCode: 200,
-      body: JSON.stringify({ id, amount }),
+      body: JSON.stringify({ id, amount, weekId }),
     };
   } catch (error) {
     console.error('Error updating income:', error);

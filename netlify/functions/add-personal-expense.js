@@ -16,14 +16,18 @@ exports.handler = async (event) => {
 
   try {
     const result = await executeQuery(
-      'INSERT INTO Personal_expenses (Description, Amount, Week) VALUES (?, ?, ?)',
-      [description, amount, weekId]
+      'CALL InsertPersonalExpense(?, ?, ?)',
+      [weekId, amount, description]
     );
 
-    return {
-      statusCode: 201,
-      body: JSON.stringify({ id: result.insertId, description, amount, weekId }),
-    };
+    if (result && result.affectedRows > 0) {
+      return {
+        statusCode: 201,
+        body: JSON.stringify({ success: true, description, amount, weekId }),
+      };
+    } else {
+      throw new Error('Failed to insert personal expense');
+    }
   } catch (error) {
     console.error('Error adding personal expense:', error);
     return {

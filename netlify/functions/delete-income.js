@@ -15,10 +15,7 @@ exports.handler = async (event) => {
   }
 
   try {
-    await executeQuery(
-      'DELETE FROM Income WHERE IncomeId = ?',
-      [id]
-    );
+    await executeQuery('CALL DeleteIncome(?)', [id]);
 
     return {
       statusCode: 200,

@@ -1,53 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/ResidueSummary.css';
 
-const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
+const ResidueSummary = ({ selectedMonth, selectedWeek, weeks, triggerUpdate }) => {
   const [monthlyResidue, setMonthlyResidue] = useState(null);
   const [weeklyResidue, setWeeklyResidue] = useState(null);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchMonthlyResidue = async () => {
-      if (!selectedMonth) return;
+  const fetchMonthlyResidue = useCallback(async () => {
+    if (!selectedMonth) return;
 
-      try {
-        const response = await fetch(`/.netlify/functions/get-residue-summary?monthId=${selectedMonth}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch monthly residue');
-        }
-        const data = await response.json();
-        setMonthlyResidue(data.TotalResidue);
-      } catch (err) {
-        setError('Error fetching monthly residue');
-        console.error('Error fetching monthly residue:', err);
+    try {
+      const response = await fetch(`/.netlify/functions/get-residue-summary?monthId=${selectedMonth}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch monthly residue');
       }
-    };
-
-    fetchMonthlyResidue();
+      const data = await response.json();
+      setMonthlyResidue(data.TotalResidue);
+    } catch (err) {
+      setError('Error fetching monthly residue');
+      console.error('Error fetching monthly residue:', err);
+    }
   }, [selectedMonth]);
 
-  useEffect(() => {
-    const fetchWeeklyResidue = async () => {
-      if (selectedWeek === null || !weeks[selectedWeek]) return;
+  const fetchWeeklyResidue = useCallback(async () => {
+    if (selectedWeek === null || !weeks[selectedWeek]) return;
 
-      const weekId = weeks[selectedWeek].WeeksId;
-      try {
-        const response = await fetch(`/.netlify/functions/get-weekly-summary?weekId=${weekId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch weekly summary');
-        }
-        const data = await response.json();
-        const residue = data.IncomeSum - data.GeneralExpensesSum - data.PersonalExpensesSum;
-        setWeeklyResidue(residue);
-      } catch (err) {
-        setError('Error fetching weekly residue');
-        console.error('Error fetching weekly residue:', err);
+    const weekId = weeks[selectedWeek].WeeksId;
+    try {
+      const response = await fetch(`/.netlify/functions/get-weekly-summary?weekId=${weekId}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch weekly summary');
       }
-    };
-
-    fetchWeeklyResidue();
+      const data = await response.json();
+      const residue = data.IncomeSum - data.GeneralExpensesSum - data.PersonalExpensesSum;
+      setWeeklyResidue(residue);
+    } catch (err) {
+      setError('Error fetching weekly residue');
+      console.error('Error fetching weekly residue:', err);
+    }
   }, [selectedWeek, weeks]);
+
+  useEffect(() => {
+    fetchMonthlyResidue();
+    fetchWeeklyResidue();
+  }, [fetchMonthlyResidue, fetchWeeklyResidue, triggerUpdate]);
 
   if (error) {
     return <div className="error">{error}</div>;
@@ -58,12 +55,10 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
   }
 
   return (
-    <motion.div
-      className="residue-container"
-    >
+    <motion.div className="residue-container">
       <motion.div 
         className="residue-summary-item"
-        key={monthlyResidue}
+        key={`monthly-${monthlyResidue}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
@@ -73,7 +68,7 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
       </motion.div>
       <motion.div 
         className="residue-summary-item"
-        key={weeklyResidue}
+        key={`weekly-${weeklyResidue}`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}

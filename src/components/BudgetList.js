@@ -279,7 +279,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
 
   return (
     <div className="budget-container">
-      <ResidueSummary selectedMonth={selectedMonth} selectedWeek={selectedWeek} weeks={weeks} />
+      <ResidueSummary selectedMonth={selectedMonth} selectedWeek={selectedWeek} weeks={weeks}  triggerUpdate={updateTrigger} />
       <div className="lists-container">
         <div className="list-column">
           <IncomeList 
