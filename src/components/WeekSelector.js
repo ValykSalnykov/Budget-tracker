@@ -19,14 +19,17 @@ const WeekSelector = React.memo(({ weeks, selectedWeek, onSelectWeek, isLoading 
   useEffect(() => {
     if (weeks.length > 0 && selectedWeek === null) {
       const today = new Date();
-      const currentWeekIndex = weeks.findIndex(week => 
-        today >= new Date(week.firstWeekDay) && today <= new Date(week.lastWeekDay)
-      );
-      
+      today.setHours(0, 0, 0, 0);
+      const currentWeekIndex = weeks.findIndex(week => {
+        const firstDay = new Date(week.firstWeekDay);
+        const lastDay = new Date(week.lastWeekDay);
+        firstDay.setHours(0, 0, 0, 0);
+        lastDay.setHours(23, 59, 59, 999);
+        return today >= firstDay && today <= lastDay;
+      });
       if (currentWeekIndex !== -1) {
         onSelectWeek(currentWeekIndex);
       } else {
-        // If current week is not found, select the last week
         onSelectWeek(weeks.length - 1);
       }
     }
