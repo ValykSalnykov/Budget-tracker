@@ -161,12 +161,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     }
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
-  };
-
   return (
     <motion.div 
       className="personal-expenses-list"

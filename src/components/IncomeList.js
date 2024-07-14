@@ -15,7 +15,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
   useEffect(() => {
     if (JSON.stringify(prevIncomesRef.current) !== JSON.stringify(incomes)) {
       setIsChanging(true);
-      const timer = setTimeout(() => setIsChanging(false), 300); // Adjust timing as needed
+      const timer = setTimeout(() => setIsChanging(false), 300);
       return () => clearTimeout(timer);
     }
     prevIncomesRef.current = incomes;
@@ -143,12 +143,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
         staggerDirection: -1
       }
     }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 },
-    exit: { opacity: 0, y: -20 }
   };
 
   return (
