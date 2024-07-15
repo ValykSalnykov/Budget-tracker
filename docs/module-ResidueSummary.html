@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: MonthCarousel</title>
+    <title>JSDoc: Module: ResidueSummary</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: MonthCarousel</h1>
+    <h1 class="page-title">Module: ResidueSummary</h1>
 
     
 
@@ -38,9 +38,7 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Этот компонент представляет собой карусель для выбора месяца.
-Он отображает текущий выбранный месяц и позволяет пользователю
-переключаться между месяцами с помощью кнопок &quot;вперед&quot; и &quot;назад&quot;.</p></div>
+            <div class="description"><p>Компонент для отображения сводки остатков по месяцу и неделе.</p></div>
         
 
         
@@ -89,7 +87,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_MonthCarousel.js.html">components/MonthCarousel.js</a>, <a href="components_MonthCarousel.js.html#line1">line 1</a>
+        <a href="components_ResidueSummary.js.html">components/ResidueSummary.js</a>, <a href="components_ResidueSummary.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -118,11 +116,6 @@
 
 
 
-    <h5>Example</h5>
-    
-    <pre class="prettyprint"><code>import MonthCarousel from './components/MonthCarousel';function App() {  const months = [    { MonthId: '1', Name: 'Январь' },    { MonthId: '2', Name: 'Февраль' },    // ...  ];  const [selectedMonth, setSelectedMonth] = useState('1');  return (    &lt;MonthCarousel      months={months}      selectedMonth={selectedMonth}      onSelectMonth={setSelectedMonth}    />  );}</code></pre>
-
-
 
         
     
@@ -130,16 +123,6 @@
 
     
 
-    
-        <h3 class="subsection-title">Requires</h3>
-
-        <ul>
-            <li>module:react</li>
-        
-            <li>module:lucide-react</li>
-        
-            <li>module:../styles/MonthCarousel.css</li>
-        </ul>
     
 
     
@@ -161,7 +144,7 @@
     
 
     
-    <h4 class="name" id="~MonthCarousel"><span class="type-signature">(inner) </span>MonthCarousel<span class="signature">(props)</span><span class="type-signature"> &rarr; {React.ReactElement}</span></h4>
+    <h4 class="name" id="~ResidueSummary"><span class="type-signature">(inner) </span>ResidueSummary<span class="signature">(props)</span><span class="type-signature"> &rarr; {React.ReactElement}</span></h4>
     
 
     
@@ -169,7 +152,7 @@
 
 
 <div class="description">
-    <p>Компонент карусели месяцев.</p>
+    <p>Компонент ResidueSummary отображает остатки по месяцу и неделе.</p>
 </div>
 
 
@@ -247,29 +230,6 @@
 
         <tr>
             
-                <td class="name"><code>months</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Массив объектов месяцев</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
                 <td class="name"><code>selectedMonth</code></td>
             
 
@@ -293,13 +253,16 @@
 
         <tr>
             
-                <td class="name"><code>onSelectMonth</code></td>
+                <td class="name"><code>selectedWeek</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">function</span>
+<span class="param-type">number</span>
+|
+
+<span class="param-type">null</span>
 
 
             
@@ -309,7 +272,30 @@
 
             
 
-            <td class="description last"><p>Функция обратного вызова для выбора месяца</p></td>
+            <td class="description last"><p>Индекс выбранной недели</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>weeks</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Массив недель</p></td>
         </tr>
 
     
@@ -357,7 +343,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_MonthCarousel.js.html">components/MonthCarousel.js</a>, <a href="components_MonthCarousel.js.html#line38">line 38</a>
+        <a href="components_ResidueSummary.js.html">components/ResidueSummary.js</a>, <a href="components_ResidueSummary.js.html#line10">line 10</a>
     </li></ul></dd>
     
 
@@ -386,7 +372,7 @@
 
         
 <div class="param-desc">
-    <p>Отрендеренный компонент MonthCarousel</p>
+    <p>Отрендеренный компонент ResidueSummary</p>
 </div>
 
 
@@ -404,6 +390,182 @@
 </dl>
 
     
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~fetchMonthlyResidue"><span class="type-signature">(async, inner) </span>fetchMonthlyResidue<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Асинхронная функция для загрузки месячного остатка.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ResidueSummary.js.html">components/ResidueSummary.js</a>, <a href="components_ResidueSummary.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~fetchWeeklyResidue"><span class="type-signature">(async, inner) </span>fetchWeeklyResidue<span class="signature">()</span><span class="type-signature"></span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Асинхронная функция для загрузки недельного остатка.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="components_ResidueSummary.js.html">components/ResidueSummary.js</a>, <a href="components_ResidueSummary.js.html#line57">line 57</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

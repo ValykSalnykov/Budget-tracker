@@ -2,10 +2,25 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/WeeklySummary.css';
 
+/**
+ * Компонент WeeklySummary отображает итоговую информацию о бюджете за выбранную неделю.
+ * 
+ * @component
+ * @param {Object} props - Свойства компонента.
+ * @param {number|null} props.selectedWeek - Индекс выбранной недели.
+ * @param {Array} props.weeks - Массив объектов, представляющих недели.
+ * @param {function} props.triggerUpdate - Функция для запуска обновления компонента.
+ */
 const WeeklySummary = ({ selectedWeek, weeks, triggerUpdate }) => {
   const [summary, setSummary] = useState(null);
   const [error, setError] = useState(null);
 
+  /**
+   * Получает итоговую информацию о бюджете за выбранную неделю.
+   * 
+   * @function
+   * @async
+   */
   const fetchSummary = useCallback(async () => {
     if (selectedWeek === null || !weeks[selectedWeek]) return;
 
@@ -35,6 +50,11 @@ const WeeklySummary = ({ selectedWeek, weeks, triggerUpdate }) => {
     return <div className="loading">Загрузка итогов недели...</div>;
   }
 
+  /**
+   * Отображает компонент с итоговой информацией о бюджете.
+   * 
+   * @returns {JSX.Element} Возвращает JSX элемент с анимированными блоками итоговой информации.
+   */
   return (
     <motion.div className="weekly-container">
       <motion.div

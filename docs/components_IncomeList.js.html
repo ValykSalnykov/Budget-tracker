@@ -1,4 +1,32 @@
-import React, { useState, useCallback, useRef, useEffect  } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: components/IncomeList.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: components/IncomeList.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState, useCallback, useRef, useEffect  } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/IncomeList.css';
@@ -40,7 +68,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
    */
   const handleAddIncome = useCallback(() => {
     const amount = parseFloat(newIncome);
-    if (amount && !isNaN(amount)) {
+    if (amount &amp;&amp; !isNaN(amount)) {
       onAddIncome(amount);
       setNewIncome('');
     }
@@ -52,7 +80,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
    */
   const handleUpdateIncome = useCallback(() => {
     const amount = parseFloat(editingState.amount);
-    if (amount && !isNaN(amount)) {
+    if (amount &amp;&amp; !isNaN(amount)) {
       onUpdateIncome(editingState.id, amount);
       setEditingState({ id: null, amount: '' });
     }
@@ -110,10 +138,10 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
    * @returns {JSX.Element} Возвращает JSX элемент, представляющий доход.
    */
   const renderIncomeItem = useCallback((income) => (
-    <>
-      <span className="income-amount">
+    &lt;>
+      &lt;span className="income-amount">
         {editingState.id === income.IncomeId ? (
-          <input
+          &lt;input
             type="number"
             value={editingState.amount}
             onChange={(e) => setEditingState(prev => ({ ...prev, amount: e.target.value }))}
@@ -122,25 +150,25 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
         ) : (
           `${income.Amount.toFixed()} ₴`
         )}
-      </span>
-      <div className="income-actions">
+      &lt;/span>
+      &lt;div className="income-actions">
         {editingState.id === income.IncomeId ? (
-          <>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={handleUpdateIncome}>
-              <FaSave />
-            </motion.button>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={cancelEditing}>
-              <FaTimes />
-            </motion.button>
-          </>
+          &lt;>
+            &lt;motion.button whileTap={{ scale: 0.95 }} onClick={handleUpdateIncome}>
+              &lt;FaSave />
+            &lt;/motion.button>
+            &lt;motion.button whileTap={{ scale: 0.95 }} onClick={cancelEditing}>
+              &lt;FaTimes />
+            &lt;/motion.button>
+          &lt;/>
         ) : (
-          <motion.button whileTap={{ scale: 0.95 }} onClick={() => startEditing(income)}>
-            <FaEdit />
-          </motion.button>
+          &lt;motion.button whileTap={{ scale: 0.95 }} onClick={() => startEditing(income)}>
+            &lt;FaEdit />
+          &lt;/motion.button>
         )}
-        <AnimatePresence>
+        &lt;AnimatePresence>
           {deletingId === income.IncomeId ? (
-            <motion.button
+            &lt;motion.button
               key="confirm"
               className="delete-button confirming"
               whileTap={{ scale: 0.97 }}
@@ -153,9 +181,9 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
               onMouseEnter={() => clearTimeout(deleteTimerRef.current)}
             >
               Вы уверены?
-            </motion.button>
+            &lt;/motion.button>
           ) : (
-            <motion.button
+            &lt;motion.button
               key="delete"
               className="delete-button"
               initial={isReturning ? { width: '100%', backgroundColor: '#ff4d4d' } : {}}
@@ -163,12 +191,12 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
               transition={{ duration: 0.85 }}
               onClick={() => handleDeleteClick(income.IncomeId)}
             >
-              <FaTrash />
-            </motion.button>
+              &lt;FaTrash />
+            &lt;/motion.button>
           )}
-        </AnimatePresence>
-      </div>
-    </>
+        &lt;/AnimatePresence>
+      &lt;/div>
+    &lt;/>
   ), [editingState, handleUpdateIncome, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
   /**
@@ -195,28 +223,28 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
   };
 
   return (
-    <motion.div 
+    &lt;motion.div 
       className="income-list"
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
     >
-      <h2>Доходы</h2>
-      <div className="add-income">
-        <input
+      &lt;h2>Доходы&lt;/h2>
+      &lt;div className="add-income">
+        &lt;input
           type="number"
           value={newIncome}
           onChange={(e) => setNewIncome(e.target.value)}
           placeholder="Сумма"
         />
-        <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddIncome}>
-          <FaPlus />
-        </motion.button>
-      </div>
-      <div className="income-list-container">
-        <AnimatePresence mode="wait">
-          {!isChanging && (
-            <motion.ul
+        &lt;motion.button whileTap={{ scale: 0.95 }} onClick={handleAddIncome}>
+          &lt;FaPlus />
+        &lt;/motion.button>
+      &lt;/div>
+      &lt;div className="income-list-container">
+        &lt;AnimatePresence mode="wait">
+          {!isChanging &amp;&amp; (
+            &lt;motion.ul
               key={JSON.stringify(incomes)}
               variants={listVariants}
               initial="hidden"
@@ -224,7 +252,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
               exit="exit"
             >
               {incomes.map(income => (
-                <motion.li 
+                &lt;motion.li 
                   key={income.IncomeId}
                   className="income-item"
                   //variants={itemVariants}
@@ -234,14 +262,36 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
                   transition={{ duration: 0.2 }}
                 >
                   {renderIncomeItem(income)}
-                </motion.li>
+                &lt;/motion.li>
               ))}
-            </motion.ul>
+            &lt;/motion.ul>
           )}
-        </AnimatePresence>
-      </div>
-    </motion.div>
+        &lt;/AnimatePresence>
+      &lt;/div>
+    &lt;/motion.div>
   );
 });
 
-export default IncomeList;
+export default IncomeList;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-BudgetList.html">BudgetList</a></li><li><a href="module-DatabaseStatus.html">DatabaseStatus</a></li><li><a href="module-MonthCarousel.html">MonthCarousel</a></li><li><a href="module-ResidueSummary.html">ResidueSummary</a></li><li><a href="module-WeekSelector.html">WeekSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#GeneralExpensesList">GeneralExpensesList</a></li><li><a href="global.html#IncomeList">IncomeList</a></li><li><a href="global.html#PersonalExpensesList">PersonalExpensesList</a></li><li><a href="global.html#WeeklySummary">WeeklySummary</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon Jul 15 2024 13:31:26 GMT+0300 (Восточная Европа, летнее время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

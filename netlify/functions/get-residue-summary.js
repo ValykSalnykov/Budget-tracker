@@ -12,7 +12,7 @@ exports.handler = async function(event, context) {
 
   try {
     const query = `
-      SELECT MonthId, MonthlyResidue
+      SELECT MonthId, MonthlyResidue, DailySpendingLimit
       FROM monthly_residue_view
       WHERE MonthId = ?
     `;
