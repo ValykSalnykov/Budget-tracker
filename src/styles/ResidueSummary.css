@@ -1,38 +1,25 @@
 .residue-container {
   display: flex;
-  text-align: center;
-  justify-content: space-evenly;
-  flex-direction: row;
-  align-content: space-around;
-  align-items: stretch;
+  justify-content: space-around;
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.residue-container h3 {
+.residue-item {
+  width: 20%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.residue-item h3 {
   margin-top: 0;
   color: var(--primary-color);
   margin-bottom: 3px;
 }
 
-.residue-summary-item {
-  width: 20%;
-  display: flex;
-  text-align: center;
-  justify-content: space-evenly;
-  flex-direction: row;
-  align-content: space-around;
-  align-items: stretch;
-}
-
-.residue-summary-item span:first-child {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.residue-summary-item span:last-child {
+.residue-summary {
   font-size: 1.2em;
   color: var(--secondary-color);
 }
