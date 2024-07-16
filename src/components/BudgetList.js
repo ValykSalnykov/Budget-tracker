@@ -26,7 +26,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
   const [generalExpensesData, setGeneralExpensesData] = useState([]);
   const [personalExpensesData, setPersonalExpensesData] = useState([]);
   const [, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
   const [updateTrigger, setUpdateTrigger] = useState(0);
 
   /**
