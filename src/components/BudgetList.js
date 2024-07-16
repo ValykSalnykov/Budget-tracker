@@ -1,3 +1,25 @@
+/**
+ * @fileoverview Компонент для отображения и управления бюджетом за выбранную неделю.
+ * @module BudgetList
+ * @requires react
+ * @requires ./IncomeList
+ * @requires ./GeneralExpensesList
+ * @requires ./PersonalExpensesList
+ * @requires ./WeeklySummary
+ * @requires ./ResidueSummary
+ * @requires ../styles/BudgetList.css
+ *
+ * @description
+ * Этот компонент отображает данные о доходах и расходах за выбранную неделю.
+ * Он позволяет добавлять, обновлять и удалять записи о доходах, общих расходах и личных расходах.
+ * Также компонент предоставляет сводку за неделю и остаток бюджета.
+ * 
+ * @param {Object} props - Свойства компонента.
+ * @param {number} props.selectedWeek - Индекс выбранной недели.
+ * @param {Array} props.weeks - Список всех недель.
+ * @param {number} props.selectedMonth - Индекс выбранного месяца.
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import IncomeList from './IncomeList';
 import GeneralExpensesList from './GeneralExpensesList';

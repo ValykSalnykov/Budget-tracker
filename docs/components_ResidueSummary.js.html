@@ -27,38 +27,28 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/**
- * @fileoverview Компонент для отображения сводки остатков по месяцу и неделе.
+ * @fileoverview Стили для компонента отображения сводки по остаткам.
  * @module ResidueSummary
+ * @requires ../components/ResidueSummary
+ *
+ * @description
+ * Этот файл содержит CSS-стили для компонента ResidueSummary.
+ * Он определяет внешний вид контейнера остатков, отдельных элементов остатков,
+ * заголовков и сводной информации. Стили используют переменные CSS для гибкой
+ * настройки цветовой схемы.
  */
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/ResidueSummary.css';
 
-/**
- * Компонент ResidueSummary отображает остатки по месяцу и неделе.
- * 
- * @function ResidueSummary
- * @param {Object} props - Свойства компонента
- * @param {string} props.selectedMonth - ID выбранного месяца
- * @param {number|null} props.selectedWeek - Индекс выбранной недели
- * @param {Array} props.weeks - Массив недель
- * @returns {React.ReactElement} Отрендеренный компонент ResidueSummary
- */
-const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
+const ResidueSummary = ({ selectedMonth, selectedWeek, weeks, triggerUpdate }) => {
   const [monthlyResidue, setMonthlyResidue] = useState(null);
   const [weeklyResidue, setWeeklyResidue] = useState(null);
+  const [dailySpendingLimit, setDailySpendingLimit] = useState(null);
   const [error, setError] = useState(null);
 
-  /**
-   * Эффект для загрузки месячного остатка.
-   */
   useEffect(() => {
-    /**
-     * Асинхронная функция для загрузки месячного остатка.
-     * @async
-     * @function fetchMonthlyResidue
-     */
     const fetchMonthlyResidue = async () => {
       if (!selectedMonth) return;
 
@@ -69,24 +59,16 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
         }
         const data = await response.json();
         setMonthlyResidue(data.MonthlyResidue);
+        setDailySpendingLimit(parseFloat(data.DailySpendingLimit));
       } catch (err) {
         setError('Ошибка при загрузке месячного остатка');
         console.error('Ошибка при загрузке месячного остатка:', err);
       }
     };
-
     fetchMonthlyResidue();
-  }, [selectedMonth]);
+  }, [selectedMonth, triggerUpdate]);
 
-  /**
-   * Эффект для загрузки недельного остатка.
-   */
   useEffect(() => {
-    /**
-     * Асинхронная функция для загрузки недельного остатка.
-     * @async
-     * @function fetchWeeklyResidue
-     */
     const fetchWeeklyResidue = async () => {
       if (selectedWeek === null || !weeks[selectedWeek]) return;
 
@@ -106,7 +88,7 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
     };
 
     fetchWeeklyResidue();
-  }, [selectedWeek, weeks]);
+  }, [selectedWeek, weeks, triggerUpdate]);
 
   if (error) {
     return &lt;div className="error">{error}&lt;/div>;
@@ -116,31 +98,50 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
     return &lt;div className="loading">Загрузка итогов месяца...&lt;/div>;
   }
 
+  const formatCurrency = (value) => {
+    if (value === null || isNaN(value)) return 'Н/Д';
+    return value.toFixed(0);
+  };
+
   return (
-    &lt;motion.div
-      className="residue-container"
-    >
-      &lt;motion.div 
-        className="residue-summary-item"
-        key={monthlyResidue}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        &lt;h3>Остаток месяца: &lt;/h3>
-        &lt;span> {monthlyResidue}&lt;/span>
-      &lt;/motion.div>
-      &lt;motion.div 
-        className="residue-summary-item"
-        key={weeklyResidue}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        &lt;h3>Остаток недели:  &lt;/h3>
-        &lt;span>{weeklyResidue}&lt;/span>
-      &lt;/motion.div>
-    &lt;/motion.div>
+    &lt;div className="residue-container">
+      &lt;div className="residue-item">
+        &lt;h3>Остаток месяца:&lt;/h3>
+        &lt;motion.div 
+          className="residue-summary"
+          key={monthlyResidue}
+          initial={{ opacity: 0, rotate: 0 }}
+          animate={{ opacity: 1, rotate: 360 }}
+          transition={{ duration: 0.5 }}
+        >
+          {monthlyResidue}
+        &lt;/motion.div>
+      &lt;/div>
+      &lt;div className="residue-item">
+        &lt;h3>Остаток недели:&lt;/h3>
+        &lt;motion.div 
+          className="residue-summary"
+          key={weeklyResidue}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {weeklyResidue}
+        &lt;/motion.div>
+      &lt;/div>
+      &lt;div className="residue-item">
+        &lt;h3>Остаток в день: &lt;/h3>
+        &lt;motion.div 
+          className="residue-summary"
+          key={dailySpendingLimit}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          {formatCurrency(dailySpendingLimit)}
+        &lt;/motion.div>
+      &lt;/div>
+    &lt;/div>
   );
 };
 
@@ -154,13 +155,13 @@ export default ResidueSummary;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-BudgetList.html">BudgetList</a></li><li><a href="module-DatabaseStatus.html">DatabaseStatus</a></li><li><a href="module-MonthCarousel.html">MonthCarousel</a></li><li><a href="module-ResidueSummary.html">ResidueSummary</a></li><li><a href="module-WeekSelector.html">WeekSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#GeneralExpensesList">GeneralExpensesList</a></li><li><a href="global.html#IncomeList">IncomeList</a></li><li><a href="global.html#PersonalExpensesList">PersonalExpensesList</a></li><li><a href="global.html#WeeklySummary">WeeklySummary</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-BudgetList.html">BudgetList</a></li><li><a href="module-DatabaseStatus.html">DatabaseStatus</a></li><li><a href="module-GeneralExpensesList.html">GeneralExpensesList</a></li><li><a href="module-IncomeList.html">IncomeList</a></li><li><a href="module-MonthCarousel.html">MonthCarousel</a></li><li><a href="module-PersonalExpensesList.html">PersonalExpensesList</a></li><li><a href="module-ResidueSummary.html">ResidueSummary</a></li><li><a href="module-WeekSelector.html">WeekSelector</a></li><li><a href="module-WeeklySummary.html">WeeklySummary</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon Jul 15 2024 13:31:26 GMT+0300 (Восточная Европа, летнее время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Jul 16 2024 17:50:45 GMT+0300 (Восточная Европа, летнее время)
 </footer>
 
 <script> prettyPrint(); </script>

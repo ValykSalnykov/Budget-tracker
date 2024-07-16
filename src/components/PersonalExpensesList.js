@@ -1,18 +1,29 @@
+/**
+ * @fileoverview Компонент для отображения и управления списком личных расходов.
+ * @module PersonalExpensesList
+ * @requires react
+ * @requires framer-motion
+ * @requires react-icons/fa
+ * @requires ../styles/PersonalExpensesList.css
+ *
+ * @description
+ * Этот компонент отображает список личных расходов с возможностью добавления,
+ * редактирования и удаления записей. Он использует анимации для плавных
+ * переходов между состояниями и обеспечивает интерактивный пользовательский опыт.
+ *
+ * @component
+ * @param {Object} props - Свойства компонента
+ * @param {Array} props.expenses - Массив объектов с информацией о расходах
+ * @param {Function} props.onAddExpense - Функция для добавления нового расхода
+ * @param {Function} props.onUpdateExpense - Функция для обновления существующего расхода
+ * @param {Function} props.onDeleteExpense - Функция для удаления расхода
+ */
+
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/PersonalExpensesList.css';
 
-/**
- * Компонент PersonalExpensesList отображает список личных расходов с возможностью добавления, редактирования и удаления записей.
- * 
- * @component
- * @param {Object} props - Свойства компонента.
- * @param {Array} props.expenses - Массив объектов, представляющих личные расходы.
- * @param {function} props.onAddExpense - Функция для добавления нового расхода.
- * @param {function} props.onUpdateExpense - Функция для обновления существующего расхода.
- * @param {function} props.onDeleteExpense - Функция для удаления расхода.
- */
 const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpense, onDeleteExpense }) => {
   const [newExpense, setNewExpense] = useState({ description: '', amount: '' });
   const [editingState, setEditingState] = useState({ id: null, description: '', amount: '' });
@@ -22,9 +33,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
   const [isChanging, setIsChanging] = useState(false);
   const prevExpensesRef = useRef(expenses);
 
-  /**
-   * Эффект для отслеживания изменений в списке расходов и установки флага изменения.
-   */
   useEffect(() => {
     if (JSON.stringify(prevExpensesRef.current) !== JSON.stringify(expenses)) {
       setIsChanging(true);
@@ -34,10 +42,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     prevExpensesRef.current = expenses;
   }, [expenses]);
 
-  /**
-   * Обработчик добавления нового личного расхода.
-   * @function
-   */
   const handleAddExpense = useCallback(() => {
     const amount = parseFloat(newExpense.amount);
     if (newExpense.description && amount && !isNaN(amount)) {
@@ -46,10 +50,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     }
   }, [newExpense, onAddExpense]);
 
-  /**
-   * Обработчик обновления существующего личного расхода.
-   * @function
-   */
   const handleUpdateExpense = useCallback(() => {
     const amount = parseFloat(editingState.amount);
     if (editingState.description && amount && !isNaN(amount)) {
@@ -58,11 +58,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     }
   }, [editingState, onUpdateExpense]);
 
-  /**
-   * Начало редактирования личного расхода.
-   * @function
-   * @param {Object} expense - Объект расхода для редактирования.
-   */
   const startEditing = useCallback((expense) => {
     setEditingState({
       id: expense.PersonalExpensesId,
@@ -71,19 +66,10 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     });
   }, []);
 
-  /**
-   * Отмена редактирования личного расхода.
-   * @function
-   */
   const cancelEditing = useCallback(() => {
     setEditingState({ id: null, description: '', amount: '' });
   }, []);
 
-  /**
-   * Обработчик клика по кнопке удаления.
-   * @function
-   * @param {string|number} id - Идентификатор личного расхода для удаления.
-   */
   const handleDeleteClick = useCallback((id) => {
     if (deletingId === id) {
       onDeleteExpense(id);
@@ -95,10 +81,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     }
   }, [deletingId, onDeleteExpense]);
 
-  /**
-   * Отмена удаления личного расхода.
-   * @function
-   */
   const cancelDeleting = useCallback(() => {
     setIsReturning(true);
     deleteTimerRef.current = setTimeout(() => {
@@ -107,12 +89,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     }, 2000);
   }, []);
 
-  /**
-   * Рендер элемента личного расхода.
-   * @function
-   * @param {Object} expense - Объект личного расхода для отображения.
-   * @returns {JSX.Element} Возвращает JSX элемент, представляющий личный расход.
-   */
   const renderExpenseItem = useCallback((expense) => (
     <>
       <span className="expense-description">
@@ -187,10 +163,6 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
     </>
   ), [editingState, handleUpdateExpense, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
-  /**
-   * Варианты анимации для списка личных расходов.
-   * @constant
-   */
   const listVariants = {
     hidden: { opacity: 0 },
     visible: { 

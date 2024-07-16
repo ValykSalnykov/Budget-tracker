@@ -1,18 +1,27 @@
+/**
+ * @fileoverview Компонент для отображения и управления списком доходов.
+ * @module IncomeList
+ * @requires react
+ * @requires framer-motion
+ * @requires react-icons/fa
+ * @requires ../styles/IncomeList.css
+ *
+ * @description
+ * Этот компонент предоставляет интерфейс для добавления, редактирования и удаления записей о доходах.
+ * Он также включает анимацию для различных действий, таких как добавление и удаление доходов.
+ * 
+ * @param {Object} props - Свойства компонента.
+ * @param {Array} props.incomes - Список доходов.
+ * @param {function} props.onAddIncome - Функция для добавления нового дохода.
+ * @param {function} props.onUpdateIncome - Функция для обновления существующего дохода.
+ * @param {function} props.onDeleteIncome - Функция для удаления дохода.
+ */
+
 import React, { useState, useCallback, useRef, useEffect  } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/IncomeList.css';
 
-/**
- * Компонент IncomeList отображает список доходов с возможностью добавления, редактирования и удаления записей.
- * 
- * @component
- * @param {Object} props - Свойства компонента.
- * @param {Array} props.incomes - Массив объектов, представляющих доходы.
- * @param {function} props.onAddIncome - Функция для добавления нового дохода.
- * @param {function} props.onUpdateIncome - Функция для обновления существующего дохода.
- * @param {function} props.onDeleteIncome - Функция для удаления дохода.
- */
 const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteIncome }) => {
   const [newIncome, setNewIncome] = useState('');
   const [editingState, setEditingState] = useState({ id: null, amount: '' });
@@ -22,9 +31,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
   const [isChanging, setIsChanging] = useState(false);
   const prevIncomesRef = useRef(incomes);
 
-  /**
-   * Эффект для отслеживания изменений в списке доходов и установки флага изменения.
-   */
   useEffect(() => {
     if (JSON.stringify(prevIncomesRef.current) !== JSON.stringify(incomes)) {
       setIsChanging(true);
@@ -34,10 +40,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     prevIncomesRef.current = incomes;
   }, [incomes]);
 
-  /**
-   * Обработчик добавления нового дохода.
-   * @function
-   */
   const handleAddIncome = useCallback(() => {
     const amount = parseFloat(newIncome);
     if (amount && !isNaN(amount)) {
@@ -46,10 +48,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     }
   }, [newIncome, onAddIncome]);
 
-  /**
-   * Обработчик обновления существующего дохода.
-   * @function
-   */
   const handleUpdateIncome = useCallback(() => {
     const amount = parseFloat(editingState.amount);
     if (amount && !isNaN(amount)) {
@@ -58,28 +56,14 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     }
   }, [editingState, onUpdateIncome]);
 
-  /**
-   * Начало редактирования дохода.
-   * @function
-   * @param {Object} income - Объект дохода для редактирования.
-   */
   const startEditing = useCallback((income) => {
     setEditingState({ id: income.IncomeId, amount: income.Amount.toString() });
   }, []);
 
-  /**
-   * Отмена редактирования дохода.
-   * @function
-   */
   const cancelEditing = useCallback(() => {
     setEditingState({ id: null, amount: '' });
   }, []);
 
-  /**
-   * Обработчик клика по кнопке удаления.
-   * @function
-   * @param {string|number} id - Идентификатор дохода для удаления.
-   */
   const handleDeleteClick = useCallback((id) => {
     if (deletingId === id) {
       onDeleteIncome(id);
@@ -91,10 +75,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     }
   }, [deletingId, onDeleteIncome]);
 
-  /**
-   * Отмена удаления дохода.
-   * @function
-   */
   const cancelDeleting = useCallback(() => {
     setIsReturning(true);
     deleteTimerRef.current = setTimeout(() => {
@@ -103,12 +83,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     }, 2000);
   }, []);
 
-  /**
-   * Рендер элемента дохода.
-   * @function
-   * @param {Object} income - Объект дохода для отображения.
-   * @returns {JSX.Element} Возвращает JSX элемент, представляющий доход.
-   */
   const renderIncomeItem = useCallback((income) => (
     <>
       <span className="income-amount">
@@ -171,10 +145,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     </>
   ), [editingState, handleUpdateIncome, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
-  /**
-   * Варианты анимации для списка доходов.
-   * @constant
-   */
   const listVariants = {
     hidden: { opacity: 0 },
     visible: { 

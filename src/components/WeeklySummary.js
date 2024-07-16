@@ -1,3 +1,22 @@
+/**
+ * @fileoverview Компонент для отображения еженедельной сводки финансов.
+ * @module WeeklySummary
+ * @requires react
+ * @requires framer-motion
+ * @requires ../styles/WeeklySummary.css
+ *
+ * @description
+ * Этот компонент отображает еженедельную финансовую сводку, включая
+ * общую сумму доходов, основных и личных расходов. Он динамически
+ * загружает данные для выбранной недели и отображает их с анимацией.
+ *
+ * @component
+ * @param {Object} props - Свойства компонента
+ * @param {number} props.selectedWeek - Индекс выбранной недели
+ * @param {Array} props.weeks - Массив объектов с информацией о неделях
+ * @param {number} props.triggerUpdate - Триггер для обновления данных
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/WeeklySummary.css';

@@ -1,18 +1,27 @@
+/**
+ * @fileoverview Компонент для отображения и управления списком основных расходов.
+ * @module GeneralExpensesList
+ * @requires react
+ * @requires framer-motion
+ * @requires react-icons/fa
+ * @requires ../styles/GeneralExpensesList.css
+ *
+ * @description
+ * Этот компонент предоставляет интерфейс для добавления, редактирования и удаления записей об основных расходах.
+ * Он также включает анимацию для различных действий, таких как добавление и удаление расходов.
+ * 
+ * @param {Object} props - Свойства компонента.
+ * @param {Array} props.expenses - Список расходов.
+ * @param {function} props.onAddExpense - Функция для добавления нового расхода.
+ * @param {function} props.onUpdateExpense - Функция для обновления существующего расхода.
+ * @param {function} props.onDeleteExpense - Функция для удаления расхода.
+ */
+
 import React, { useState, useCallback, useRef, useEffect  } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 import '../styles/GeneralExpensesList.css';
 
-/**
- * Компонент GeneralExpensesList отображает список основных расходов с возможностью добавления, редактирования и удаления записей.
- * 
- * @component
- * @param {Object} props - Свойства компонента.
- * @param {Array} props.expenses - Массив объектов, представляющих основные расходы.
- * @param {function} props.onAddExpense - Функция для добавления нового расхода.
- * @param {function} props.onUpdateExpense - Функция для обновления существующего расхода.
- * @param {function} props.onDeleteExpense - Функция для удаления расхода.
- */
 const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpense, onDeleteExpense }) => {
   const [newExpense, setNewExpense] = useState({ description: '', amount: '' });
   const [editingState, setEditingState] = useState({ id: null, description: '', amount: '' });
@@ -22,9 +31,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
   const [isChanging, setIsChanging] = useState(false);
   const prevExpensesRef = useRef(expenses);
 
-  /**
-   * Эффект для отслеживания изменений в списке расходов и установки флага изменения.
-   */
+
   useEffect(() => {
     if (JSON.stringify(prevExpensesRef.current) !== JSON.stringify(expenses)) {
       setIsChanging(true);
@@ -34,10 +41,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     prevExpensesRef.current = expenses;
   }, [expenses]);
 
-  /**
-   * Обработчик добавления нового расхода.
-   * @function
-   */
   const handleAddExpense = useCallback(() => {
     const amount = parseFloat(newExpense.amount);
     if (newExpense.description && amount && !isNaN(amount)) {
@@ -46,10 +49,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }
   }, [newExpense, onAddExpense]);
 
-  /**
-   * Обработчик обновления существующего расхода.
-   * @function
-   */
   const handleUpdateExpense = useCallback(() => {
     const amount = parseFloat(editingState.amount);
     if (editingState.description && amount && !isNaN(amount)) {
@@ -58,11 +57,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }
   }, [editingState, onUpdateExpense]);
 
-  /**
-   * Начало редактирования расхода.
-   * @function
-   * @param {Object} expense - Объект расхода для редактирования.
-   */
   const startEditing = useCallback((expense) => {
     setEditingState({
       id: expense.GeneralExpensesId,
@@ -71,19 +65,10 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     });
   }, []);
 
-  /**
-   * Отмена редактирования расхода.
-   * @function
-   */
   const cancelEditing = useCallback(() => {
     setEditingState({ id: null, description: '', amount: '' });
   }, []);
 
-  /**
-   * Обработчик клика по кнопке удаления.
-   * @function
-   * @param {string|number} id - Идентификатор расхода для удаления.
-   */
   const handleDeleteClick = useCallback((id) => {
     if (deletingId === id) {
       onDeleteExpense(id);
@@ -95,10 +80,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }
   }, [deletingId, onDeleteExpense]);
 
-  /**
-   * Отмена удаления расхода.
-   * @function
-   */
+
   const cancelDeleting = useCallback(() => {
     setIsReturning(true);
     deleteTimerRef.current = setTimeout(() => {
@@ -107,12 +89,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }, 2000);
   }, []);
 
-  /**
-   * Рендер элемента расхода.
-   * @function
-   * @param {Object} expense - Объект расхода для отображения.
-   * @returns {JSX.Element} Возвращает JSX элемент, представляющий расход.
-   */
   const renderExpenseItem = useCallback((expense) => (
     <>
       <span className="expense-description">
@@ -187,10 +163,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     </>
   ), [editingState, handleUpdateExpense, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
-  /**
-   * Варианты анимации для списка расходов.
-   * @constant
-   */
   const listVariants = {
     hidden: { opacity: 0 },
     visible: { 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: BudgetList</title>
+    <title>JSDoc: Module: IncomeList</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: BudgetList</h1>
+    <h1 class="page-title">Module: IncomeList</h1>
 
     
 
@@ -38,9 +38,8 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Этот компонент отображает данные о доходах и расходах за выбранную неделю.
-Он позволяет добавлять, обновлять и удалять записи о доходах, общих расходах и личных расходах.
-Также компонент предоставляет сводку за неделю и остаток бюджета.</p></div>
+            <div class="description"><p>Этот компонент предоставляет интерфейс для добавления, редактирования и удаления записей о доходах.
+Он также включает анимацию для различных действий, таких как добавление и удаление доходов.</p></div>
         
 
         
@@ -123,30 +122,7 @@
 
         <tr>
             
-                <td class="name"><code>selectedWeek</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Индекс выбранной недели.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>weeks</code></td>
+                <td class="name"><code>incomes</code></td>
             
 
             <td class="type">
@@ -162,20 +138,20 @@
 
             
 
-            <td class="description last"><p>Список всех недель.</p></td>
+            <td class="description last"><p>Список доходов.</p></td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>selectedMonth</code></td>
+                <td class="name"><code>onAddIncome</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">number</span>
+<span class="param-type">function</span>
 
 
             
@@ -185,7 +161,53 @@
 
             
 
-            <td class="description last"><p>Индекс выбранного месяца.</p></td>
+            <td class="description last"><p>Функция для добавления нового дохода.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onUpdateIncome</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Функция для обновления существующего дохода.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onDeleteIncome</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Функция для удаления дохода.</p></td>
         </tr>
 
     
@@ -233,7 +255,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="components_BudgetList.js.html">components/BudgetList.js</a>, <a href="components_BudgetList.js.html#line1">line 1</a>
+        <a href="components_IncomeList.js.html">components/IncomeList.js</a>, <a href="components_IncomeList.js.html#line1">line 1</a>
     </li></ul></dd>
     
 
@@ -275,17 +297,11 @@
         <ul>
             <li>module:react</li>
         
-            <li>module:./IncomeList</li>
+            <li>module:framer-motion</li>
         
-            <li>module:./GeneralExpensesList</li>
+            <li>module:react-icons/fa</li>
         
-            <li>module:./PersonalExpensesList</li>
-        
-            <li>module:./WeeklySummary</li>
-        
-            <li>module:./ResidueSummary</li>
-        
-            <li>module:../styles/BudgetList.css</li>
+            <li>module:../styles/IncomeList.css</li>
         </ul>
     
 

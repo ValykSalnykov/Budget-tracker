@@ -13,11 +13,6 @@
  * выбором месяца и недели. Он использует хуки React для управления состоянием
  * и побочными эффектами, а также включает в себя логику для загрузки данных
  * о месяцах и неделях с сервера.
- * 
- * @example
- * import App from './App';
- * 
- * ReactDOM.render(<App />, document.getElementById('root'));
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -27,11 +22,6 @@ import DatabaseStatus from './components/DatabaseStatus';
 import BudgetList from './components/BudgetList';
 import './App.css';
 
-/**
- * Главный компонент приложения.
- * @function App
- * @returns {React.ReactElement} Отрендеренный компонент App
- */
 const App = () => {
   const [months, setMonths] = useState([]);
   const [selectedMonth, setSelectedMonth] = useState('');
@@ -40,15 +30,6 @@ const App = () => {
   const [isLoading, setIsLoading] = useState({ months: true, weeks: false });
   const [, setError] = useState(null);
 
-  /**
-   * Получает данные с заданного URL.
-   * @async
-   * @function fetchData
-   * @param {string} url - URL для получения данных
-   * @param {string} errorMessage - Сообщение об ошибке, если запрос не удался
-   * @returns {Promise<Object>} Полученные данные
-   * @throws {Error} Выбрасывает ошибку, если запрос не удался
-   */
   const fetchData = useCallback(async (url, errorMessage) => {
     const response = await fetch(url);
     if (!response.ok) {
@@ -57,11 +38,6 @@ const App = () => {
     return response.json();
   }, []);
 
-  /**
-   * Получает данные о месяцах и устанавливает начальный выбранный месяц.
-   * @async
-   * @function fetchMonths
-   */
   const fetchMonths = useCallback(async () => {
     try {
       const data = await fetchData('/.netlify/functions/get-months', 'Не удалось получить данные о месяцах');
@@ -76,12 +52,6 @@ const App = () => {
     }
   }, [fetchData]);
 
-  /**
-   * Получает данные о неделях для заданного месяца.
-   * @async
-   * @function fetchWeeks
-   * @param {string} monthId - ID месяца, для которого нужно получить недели
-   */
   const fetchWeeks = useCallback(async (monthId) => {
     if (!monthId) return;
     setIsLoading(prev => ({ ...prev, weeks: true }));
@@ -110,21 +80,11 @@ const App = () => {
     }
   }, [selectedMonth, fetchWeeks]);
 
-  /**
-   * Обрабатывает выбор месяца.
-   * @function handleMonthSelect
-   * @param {string} monthId - ID выбранного месяца
-   */
   const handleMonthSelect = useCallback((monthId) => {
     setSelectedMonth(monthId);
     setSelectedWeek(null);
   }, []);
 
-  /**
-   * Обрабатывает выбор недели.
-   * @function handleWeekSelect
-   * @param {number} weekIndex - Индекс выбранной недели
-   */
   const handleWeekSelect = useCallback((weekIndex) => {
     setSelectedWeek(weekIndex);
   }, []);

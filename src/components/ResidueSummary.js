@@ -1,3 +1,15 @@
+/**
+ * @fileoverview Стили для компонента отображения сводки по остаткам.
+ * @module ResidueSummary
+ * @requires ../components/ResidueSummary
+ *
+ * @description
+ * Этот файл содержит CSS-стили для компонента ResidueSummary.
+ * Он определяет внешний вид контейнера остатков, отдельных элементов остатков,
+ * заголовков и сводной информации. Стили используют переменные CSS для гибкой
+ * настройки цветовой схемы.
+ */
+
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/ResidueSummary.css';

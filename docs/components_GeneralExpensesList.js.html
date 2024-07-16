@@ -26,21 +26,30 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import React, { useState, useCallback, useRef, useEffect  } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
-import '../styles/GeneralExpensesList.css';
-
-/**
- * Компонент GeneralExpensesList отображает список основных расходов с возможностью добавления, редактирования и удаления записей.
+            <pre class="prettyprint source linenums"><code>/**
+ * @fileoverview Компонент для отображения и управления списком основных расходов.
+ * @module GeneralExpensesList
+ * @requires react
+ * @requires framer-motion
+ * @requires react-icons/fa
+ * @requires ../styles/GeneralExpensesList.css
+ *
+ * @description
+ * Этот компонент предоставляет интерфейс для добавления, редактирования и удаления записей об основных расходах.
+ * Он также включает анимацию для различных действий, таких как добавление и удаление расходов.
  * 
- * @component
  * @param {Object} props - Свойства компонента.
- * @param {Array} props.expenses - Массив объектов, представляющих основные расходы.
+ * @param {Array} props.expenses - Список расходов.
  * @param {function} props.onAddExpense - Функция для добавления нового расхода.
  * @param {function} props.onUpdateExpense - Функция для обновления существующего расхода.
  * @param {function} props.onDeleteExpense - Функция для удаления расхода.
  */
+
+import React, { useState, useCallback, useRef, useEffect  } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
+import '../styles/GeneralExpensesList.css';
+
 const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpense, onDeleteExpense }) => {
   const [newExpense, setNewExpense] = useState({ description: '', amount: '' });
   const [editingState, setEditingState] = useState({ id: null, description: '', amount: '' });
@@ -50,9 +59,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
   const [isChanging, setIsChanging] = useState(false);
   const prevExpensesRef = useRef(expenses);
 
-  /**
-   * Эффект для отслеживания изменений в списке расходов и установки флага изменения.
-   */
+
   useEffect(() => {
     if (JSON.stringify(prevExpensesRef.current) !== JSON.stringify(expenses)) {
       setIsChanging(true);
@@ -62,10 +69,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     prevExpensesRef.current = expenses;
   }, [expenses]);
 
-  /**
-   * Обработчик добавления нового расхода.
-   * @function
-   */
   const handleAddExpense = useCallback(() => {
     const amount = parseFloat(newExpense.amount);
     if (newExpense.description &amp;&amp; amount &amp;&amp; !isNaN(amount)) {
@@ -74,10 +77,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }
   }, [newExpense, onAddExpense]);
 
-  /**
-   * Обработчик обновления существующего расхода.
-   * @function
-   */
   const handleUpdateExpense = useCallback(() => {
     const amount = parseFloat(editingState.amount);
     if (editingState.description &amp;&amp; amount &amp;&amp; !isNaN(amount)) {
@@ -86,11 +85,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }
   }, [editingState, onUpdateExpense]);
 
-  /**
-   * Начало редактирования расхода.
-   * @function
-   * @param {Object} expense - Объект расхода для редактирования.
-   */
   const startEditing = useCallback((expense) => {
     setEditingState({
       id: expense.GeneralExpensesId,
@@ -99,19 +93,10 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     });
   }, []);
 
-  /**
-   * Отмена редактирования расхода.
-   * @function
-   */
   const cancelEditing = useCallback(() => {
     setEditingState({ id: null, description: '', amount: '' });
   }, []);
 
-  /**
-   * Обработчик клика по кнопке удаления.
-   * @function
-   * @param {string|number} id - Идентификатор расхода для удаления.
-   */
   const handleDeleteClick = useCallback((id) => {
     if (deletingId === id) {
       onDeleteExpense(id);
@@ -123,10 +108,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }
   }, [deletingId, onDeleteExpense]);
 
-  /**
-   * Отмена удаления расхода.
-   * @function
-   */
+
   const cancelDeleting = useCallback(() => {
     setIsReturning(true);
     deleteTimerRef.current = setTimeout(() => {
@@ -135,12 +117,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     }, 2000);
   }, []);
 
-  /**
-   * Рендер элемента расхода.
-   * @function
-   * @param {Object} expense - Объект расхода для отображения.
-   * @returns {JSX.Element} Возвращает JSX элемент, представляющий расход.
-   */
   const renderExpenseItem = useCallback((expense) => (
     &lt;>
       &lt;span className="expense-description">
@@ -215,10 +191,6 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     &lt;/>
   ), [editingState, handleUpdateExpense, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
 
-  /**
-   * Варианты анимации для списка расходов.
-   * @constant
-   */
   const listVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -304,13 +276,13 @@ export default GeneralExpensesList;</code></pre>
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-BudgetList.html">BudgetList</a></li><li><a href="module-DatabaseStatus.html">DatabaseStatus</a></li><li><a href="module-MonthCarousel.html">MonthCarousel</a></li><li><a href="module-ResidueSummary.html">ResidueSummary</a></li><li><a href="module-WeekSelector.html">WeekSelector</a></li></ul><h3>Global</h3><ul><li><a href="global.html#GeneralExpensesList">GeneralExpensesList</a></li><li><a href="global.html#IncomeList">IncomeList</a></li><li><a href="global.html#PersonalExpensesList">PersonalExpensesList</a></li><li><a href="global.html#WeeklySummary">WeeklySummary</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-App.html">App</a></li><li><a href="module-BudgetList.html">BudgetList</a></li><li><a href="module-DatabaseStatus.html">DatabaseStatus</a></li><li><a href="module-GeneralExpensesList.html">GeneralExpensesList</a></li><li><a href="module-IncomeList.html">IncomeList</a></li><li><a href="module-MonthCarousel.html">MonthCarousel</a></li><li><a href="module-PersonalExpensesList.html">PersonalExpensesList</a></li><li><a href="module-ResidueSummary.html">ResidueSummary</a></li><li><a href="module-WeekSelector.html">WeekSelector</a></li><li><a href="module-WeeklySummary.html">WeeklySummary</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Mon Jul 15 2024 13:31:26 GMT+0300 (Восточная Европа, летнее время)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.3</a> on Tue Jul 16 2024 17:50:45 GMT+0300 (Восточная Европа, летнее время)
 </footer>
 
 <script> prettyPrint(); </script>
