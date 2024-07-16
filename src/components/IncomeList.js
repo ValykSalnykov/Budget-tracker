@@ -227,7 +227,6 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
                 <motion.li 
                   key={income.IncomeId}
                   className="income-item"
-                  //variants={itemVariants}
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}

@@ -1,37 +1,14 @@
-/**
- * @fileoverview Компонент для отображения сводки остатков по месяцу и неделе.
- * @module ResidueSummary
- */
-
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import '../styles/ResidueSummary.css';
 
-/**
- * Компонент ResidueSummary отображает остатки по месяцу и неделе.
- * 
- * @function ResidueSummary
- * @param {Object} props - Свойства компонента
- * @param {string} props.selectedMonth - ID выбранного месяца
- * @param {number|null} props.selectedWeek - Индекс выбранной недели
- * @param {Array} props.weeks - Массив недель
- * @returns {React.ReactElement} Отрендеренный компонент ResidueSummary
- */
-const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
+const ResidueSummary = ({ selectedMonth, selectedWeek, weeks, triggerUpdate }) => {
   const [monthlyResidue, setMonthlyResidue] = useState(null);
   const [weeklyResidue, setWeeklyResidue] = useState(null);
   const [dailySpendingLimit, setDailySpendingLimit] = useState(null);
   const [error, setError] = useState(null);
 
-  /**
-   * Эффект для загрузки месячного остатка.
-   */
   useEffect(() => {
-    /**
-     * Асинхронная функция для загрузки месячного остатка.
-     * @async
-     * @function fetchMonthlyResidue
-     */
     const fetchMonthlyResidue = async () => {
       if (!selectedMonth) return;
 
@@ -48,19 +25,10 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
         console.error('Ошибка при загрузке месячного остатка:', err);
       }
     };
-
     fetchMonthlyResidue();
-  }, [selectedMonth]);
+  }, [selectedMonth, triggerUpdate]);
 
-  /**
-   * Эффект для загрузки недельного остатка.
-   */
   useEffect(() => {
-    /**
-     * Асинхронная функция для загрузки недельного остатка.
-     * @async
-     * @function fetchWeeklyResidue
-     */
     const fetchWeeklyResidue = async () => {
       if (selectedWeek === null || !weeks[selectedWeek]) return;
 
@@ -80,7 +48,7 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks }) => {
     };
 
     fetchWeeklyResidue();
-  }, [selectedWeek, weeks]);
+  }, [selectedWeek, weeks, triggerUpdate]);
 
   if (error) {
     return <div className="error">{error}</div>;
