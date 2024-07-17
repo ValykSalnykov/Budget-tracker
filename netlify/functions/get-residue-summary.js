@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для получения сводки остатка.
+ * @module GetResidueSummary
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для получения сводки остатка за месяц.
+ * Он принимает GET запросы с идентификатором месяца и возвращает информацию о месячном остатке
+ * и ежедневном лимите расходов из представления monthly_residue_view.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async function(event, context) {

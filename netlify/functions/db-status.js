@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Обработчик для проверки статуса подключения к базе данных.
+ * @module DbStatus
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для проверки статуса подключения к базе данных.
+ * Он выполняет простой запрос к базе данных и возвращает статус подключения.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async function(event, context) {

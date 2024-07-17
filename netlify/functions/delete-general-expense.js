@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для удаления общих расходов.
+ * @module DeleteGeneralExpense
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для удаления общих расходов из базы данных.
+ * Он принимает DELETE запросы с идентификатором расхода и удаляет соответствующую запись,
+ * используя хранимую процедуру.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {

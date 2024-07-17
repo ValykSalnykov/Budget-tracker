@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для получения списка недель.
+ * @module GetWeeks
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для получения списка недель для конкретного месяца.
+ * Он принимает GET запросы с идентификатором месяца и возвращает отсортированный список недель
+ * с их идентификаторами, номерами и датами начала и конца недели.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async function(event, context) {

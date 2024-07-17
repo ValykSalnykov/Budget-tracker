@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Утилиты для работы с базой данных.
+ * @module DbUtils
+ * @requires mysql2/promise
+ * @requires dotenv
+ * 
+ * @description
+ * Этот модуль предоставляет функцию для выполнения запросов к базе данных MySQL.
+ * Он использует конфигурацию из переменных окружения и управляет подключением к базе данных.
+ */
+
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 

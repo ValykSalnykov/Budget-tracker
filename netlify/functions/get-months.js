@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Обработчик для получения списка месяцев.
+ * @module GetMonths
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для получения списка всех месяцев из базы данных.
+ * Он выполняет запрос к таблице Months и возвращает отсортированный список месяцев с их идентификаторами и номерами.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async function(event, context) {

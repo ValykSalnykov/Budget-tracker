@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Обработчик для добавления дохода.
+ * @module AddIncome
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для добавления дохода в базу данных.
+ * Он принимает POST запросы с данными о доходе и сохраняет их, используя хранимую процедуру.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {

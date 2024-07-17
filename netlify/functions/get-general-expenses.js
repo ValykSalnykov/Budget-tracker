@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для получения общих расходов.
+ * @module GetGeneralExpenses
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для получения списка общих расходов из базы данных.
+ * Он принимает GET запросы с идентификатором недели и возвращает список общих расходов
+ * для указанной недели.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {

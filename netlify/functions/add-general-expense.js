@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Обработчик для добавления общих расходов.
+ * @module AddGeneralExpense
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для добавления общих расходов в базу данных.
+ * Он принимает POST запросы с данными о расходах и сохраняет их, используя хранимую процедуру.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {
@@ -15,15 +25,11 @@ exports.handler = async (event) => {
   }
 
   try {
-    // Вызываем хранимую процедуру
     const result = await executeQuery(
       'CALL InsertGeneralExpense(?, ?, ?)',
       [weekId, amount, description]
     );
-
-    // Проверяем, что результат существует и содержит нужную информацию
     if (result && result.affectedRows > 0) {
-      // Если процедура не возвращает ID, можно использовать affectedRows для подтверждения вставки
       return {
         statusCode: 201,
         body: JSON.stringify({ success: true, description, amount, weekId }),

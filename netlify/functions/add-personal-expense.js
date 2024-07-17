@@ -1,3 +1,13 @@
+/**
+ * @fileoverview Обработчик для добавления личных расходов.
+ * @module AddPersonalExpense
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для добавления личных расходов в базу данных.
+ * Он принимает POST запросы с данными о расходах и сохраняет их, используя хранимую процедуру.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {

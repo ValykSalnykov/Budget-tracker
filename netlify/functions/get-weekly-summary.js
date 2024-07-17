@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для получения недельной сводки.
+ * @module GetWeeklySummary
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для получения финансовой сводки за неделю.
+ * Он принимает GET запросы с идентификатором недели и возвращает суммарную информацию
+ * о доходах, общих расходах и личных расходах за указанную неделю из таблицы Accounting.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async function(event, context) {

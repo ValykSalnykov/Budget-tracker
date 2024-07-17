@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для получения информации о доходах.
+ * @module GetIncome
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для получения информации о доходах из базы данных.
+ * Он принимает GET запросы с идентификатором недели и возвращает список доходов
+ * для указанной недели.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {

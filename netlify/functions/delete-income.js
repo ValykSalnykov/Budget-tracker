@@ -1,3 +1,14 @@
+/**
+ * @fileoverview Обработчик для удаления дохода.
+ * @module DeleteIncome
+ * @requires ./db-utils
+ * 
+ * @description
+ * Этот модуль содержит AWS Lambda обработчик для удаления записи о доходе из базы данных.
+ * Он принимает DELETE запросы с идентификатором дохода и удаляет соответствующую запись,
+ * используя хранимую процедуру.
+ */
+
 const { executeQuery } = require('./db-utils');
 
 exports.handler = async (event) => {
