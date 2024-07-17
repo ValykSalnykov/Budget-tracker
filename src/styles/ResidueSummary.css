@@ -4,13 +4,14 @@
   background-color: var(--card-background);
   border-radius: 8px;
   padding: 20px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 .residue-item {
   width: 20%;
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
 }
 
 .residue-item h3 {
@@ -20,6 +21,6 @@
 }
 
 .residue-summary {
-  font-size: 1.2em;
+  font-size: 1.8em;
   color: var(--secondary-color);
 }
