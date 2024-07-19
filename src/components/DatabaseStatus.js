@@ -11,15 +11,11 @@
 **/
 
 import React, { useState, useEffect } from 'react';
-import '../styles/DatabaseStatus.css';
-
 
 const DatabaseStatus = () => {
-
   const [connectionStatus, setConnectionStatus] = useState('connecting');
 
   useEffect(() => {
-
     const checkConnection = async () => {
       try {
         setConnectionStatus('connecting');
@@ -39,9 +35,17 @@ const DatabaseStatus = () => {
     return () => clearInterval(intervalId);
   }, []);
 
+  const statusColors = {
+    connected: 'bg-green-500',
+    disconnected: 'bg-red-500',
+    connecting: 'bg-yellow-400'
+  };
+
   return (
-    <div className={`database-status ${connectionStatus}`}>
-      <div className="status-indicator"></div>
+    <div className="fixed top-0 left-0 w-full h-2 z-50">
+      <div 
+        className={`h-full w-full transition-colors duration-300 ease-in-out ${statusColors[connectionStatus]} ${connectionStatus === 'connecting' ? 'animate-pulse' : ''}`}
+      ></div>
     </div>
   );
 };

@@ -7,7 +7,6 @@
  * @requires ./PersonalExpensesList
  * @requires ./WeeklySummary
  * @requires ./ResidueSummary
- * @requires ../styles/BudgetList.css
  *
  * @description
  * Этот компонент отображает данные о доходах и расходах за выбранную неделю.
@@ -26,7 +25,6 @@ import GeneralExpensesList from './GeneralExpensesList';
 import PersonalExpensesList from './PersonalExpensesList';
 import WeeklySummary from './WeeklySummary';
 import ResidueSummary from './ResidueSummary';
-import '../styles/BudgetList.css';
 
 const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
   const [incomeData, setIncomeData] = useState([]);
@@ -288,10 +286,15 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
   }, [selectedWeek, weeks, fetchIncomeData]);
 
   return (
-    <div className="budget-container">
-      <ResidueSummary selectedMonth={selectedMonth} selectedWeek={selectedWeek} weeks={weeks}  triggerUpdate={updateTrigger} />
-      <div className="lists-container">
-        <div className="list-column">
+    <div className="flex flex-col space-y-6">
+      <ResidueSummary 
+        selectedMonth={selectedMonth} 
+        selectedWeek={selectedWeek} 
+        weeks={weeks}  
+        triggerUpdate={updateTrigger} 
+      />
+      <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
+        <div className="flex-1">
           <IncomeList 
             incomes={incomeData} 
             onAddIncome={handleAddIncome}
@@ -299,7 +302,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
             onDeleteIncome={handleDeleteIncome}
           />
         </div>
-        <div className="list-column">
+        <div className="flex-1">
           <GeneralExpensesList 
             expenses={generalExpensesData}
             onAddExpense={handleAddGeneralExpense}
@@ -307,7 +310,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
             onDeleteExpense={handleDeleteGeneralExpense}
           />
         </div>
-        <div className="list-column">
+        <div className="flex-1">
           <PersonalExpensesList 
             expenses={personalExpensesData}
             onAddExpense={handleAddPersonalExpense}
@@ -316,7 +319,11 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
           />
         </div>
       </div>
-      <WeeklySummary selectedWeek={selectedWeek} weeks={weeks} triggerUpdate={updateTrigger}/>
+      <WeeklySummary 
+        selectedWeek={selectedWeek} 
+        weeks={weeks} 
+        triggerUpdate={updateTrigger}
+      />
     </div>
   );
 });

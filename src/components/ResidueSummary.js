@@ -12,7 +12,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import '../styles/ResidueSummary.css';
 
 const ResidueSummary = ({ selectedMonth, selectedWeek, weeks, triggerUpdate }) => {
   const [monthlyResidue, setMonthlyResidue] = useState(null);
@@ -63,11 +62,11 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks, triggerUpdate }) =
   }, [selectedWeek, weeks, triggerUpdate]);
 
   if (error) {
-    return <div className="error">{error}</div>;
+    return <div className="text-red-600 font-bold">{error}</div>;
   }
 
   if (monthlyResidue === null || weeklyResidue === null) {
-    return <div className="loading">Загрузка итогов месяца...</div>;
+    return <div className="text-gray-600">Загрузка итогов месяца...</div>;
   }
 
   const formatCurrency = (value) => {
@@ -76,45 +75,27 @@ const ResidueSummary = ({ selectedMonth, selectedWeek, weeks, triggerUpdate }) =
   };
 
   return (
-    <div className="residue-container">
-      <div className="residue-item">
-        <h3>Остаток месяца:</h3>
-        <motion.div 
-          className="residue-summary"
-          key={monthlyResidue}
-          initial={{ opacity: 0, rotate: 0 }}
-          animate={{ opacity: 1, rotate: 360 }}
-          transition={{ duration: 0.5 }}
-        >
-          {monthlyResidue}
-        </motion.div>
-      </div>
-      <div className="residue-item">
-        <h3>Остаток недели:</h3>
-        <motion.div 
-          className="residue-summary"
-          key={weeklyResidue}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {weeklyResidue}
-        </motion.div>
-      </div>
-      <div className="residue-item">
-        <h3>Остаток в день: </h3>
-        <motion.div 
-          className="residue-summary"
-          key={dailySpendingLimit}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          {formatCurrency(dailySpendingLimit)}
-        </motion.div>
-      </div>
+    <div className="flex justify-evenly items-center bg-white rounded-xl shadow-lg p-4 mt-8 transition-all duration-300">
+      <ResidueItem title="Остаток месяца:" value={monthlyResidue} />
+      <ResidueItem title="Остаток недели:" value={weeklyResidue} />
+      <ResidueItem title="Остаток в день:" value={formatCurrency(dailySpendingLimit)} />
     </div>
   );
 };
+
+const ResidueItem = ({ title, value }) => (
+  <div className="flex flex-col items-center">
+    <h3 className="text-lg font-medium text-gray-800 mb-2">{title}</h3>
+    <motion.div 
+      className="text-3xl font-bold text-blue-500"
+      key={value}
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {value}
+    </motion.div>
+  </div>
+);
 
 export default ResidueSummary;
