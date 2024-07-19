@@ -20,7 +20,6 @@ import MonthCarousel from './components/MonthCarousel';
 import WeekSelector from './components/WeekSelector';
 import DatabaseStatus from './components/DatabaseStatus';
 import BudgetList from './components/BudgetList';
-import './App.css';
 
 const App = () => {
   const [months, setMonths] = useState([]);
@@ -28,7 +27,7 @@ const App = () => {
   const [weeks, setWeeks] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState(null);
   const [isLoading, setIsLoading] = useState({ months: true, weeks: false });
-  const [, setError] = useState(null);
+  const [error, setError] = useState(null);
 
   const fetchData = useCallback(async (url, errorMessage) => {
     const response = await fetch(url);
@@ -56,11 +55,7 @@ const App = () => {
     if (!monthId) return;
     setIsLoading(prev => ({ ...prev, weeks: true }));
     try {
-      const response = await fetch(`/.netlify/functions/get-weeks?monthId=${monthId}`);
-      if (!response.ok) {
-        throw new Error('Не удалось получить данные о неделях');
-      }
-      const data = await response.json();
+      const data = await fetchData(`/.netlify/functions/get-weeks?monthId=${monthId}`, 'Не удалось получить данные о неделях');
       setWeeks(data);
       setSelectedWeek(null);
     } catch (error) {
@@ -68,7 +63,7 @@ const App = () => {
     } finally {
       setIsLoading(prev => ({ ...prev, weeks: false }));
     }
-  }, []);
+  }, [fetchData]);
 
   useEffect(() => {
     fetchMonths();
@@ -90,24 +85,37 @@ const App = () => {
   }, []);
 
   return (
-    <div className="app">
-      <DatabaseStatus/>
-      {months.length > 0 && (
-        <MonthCarousel
-          months={months}
-          selectedMonth={selectedMonth}
-          onSelectMonth={handleMonthSelect}
+    <div className="min-h-screen bg-gray-100 text-gray-900 font-sans">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <DatabaseStatus />
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
+            <p>{error}</p>
+          </div>
+        )}
+        {isLoading.months ? (
+          <div className="text-center py-4">
+            <p className="text-lg">Загрузка месяцев...</p>
+          </div>
+        ) : (
+          months.length > 0 && (
+            <MonthCarousel
+              months={months}
+              selectedMonth={selectedMonth}
+              onSelectMonth={handleMonthSelect}
+            />
+          )
+        )}
+        <WeekSelector
+          weeks={weeks}
+          selectedWeek={selectedWeek}
+          onSelectWeek={handleWeekSelect}
+          isLoading={isLoading.weeks}
         />
-      )}
-      <WeekSelector
-        weeks={weeks}
-        selectedWeek={selectedWeek}
-        onSelectWeek={handleWeekSelect}
-        isLoading={isLoading.weeks}
-      />
-      {weeks.length > 0 && selectedWeek !== null && (
-        <BudgetList selectedWeek={selectedWeek} weeks={weeks} selectedMonth={selectedMonth}/>
-      )}
+        {weeks.length > 0 && selectedWeek !== null && (
+          <BudgetList selectedWeek={selectedWeek} weeks={weeks} selectedMonth={selectedMonth} />
+        )}
+      </div>
     </div>
   );
 }

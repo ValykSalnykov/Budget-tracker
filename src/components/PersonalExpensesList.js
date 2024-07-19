@@ -22,7 +22,6 @@
 import React, { useState, useCallback, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
-import '../styles/PersonalExpensesList.css';
 
 const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpense, onDeleteExpense }) => {
   const [newExpense, setNewExpense] = useState({ description: '', amount: '' });
@@ -36,7 +35,7 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
   useEffect(() => {
     if (JSON.stringify(prevExpensesRef.current) !== JSON.stringify(expenses)) {
       setIsChanging(true);
-      const timer = setTimeout(() => setIsChanging(false), 300); // Adjust timing as needed
+      const timer = setTimeout(() => setIsChanging(false), 300);
       return () => clearTimeout(timer);
     }
     prevExpensesRef.current = expenses;
@@ -91,42 +90,54 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
 
   const renderExpenseItem = useCallback((expense) => (
     <>
-      <span className="expense-description">
+      <span className="flex-1 mr-2 font-medium">
         {editingState.id === expense.PersonalExpensesId ? (
           <input
             type="text"
             value={editingState.description}
             onChange={(e) => setEditingState(prev => ({ ...prev, description: e.target.value }))}
-            className="editing-input"
+            className="w-full p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
           />
         ) : (
           expense.Description
         )}
       </span>
-      <span className="expense-amount">
+      <span className="text-red-600 font-bold text-lg mr-2">
         {editingState.id === expense.PersonalExpensesId ? (
           <input
             type="number"
             value={editingState.amount}
             onChange={(e) => setEditingState(prev => ({ ...prev, amount: e.target.value }))}
-            className="editing-input"
+            className="w-24 p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
           />
         ) : (
           `${expense.Amount.toFixed()} ₴`
         )}
       </span>
-      <div className="expense-actions">
+      <div className="flex gap-2">
         {editingState.id === expense.PersonalExpensesId ? (
           <>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={handleUpdateExpense}>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={handleUpdateExpense}
+              className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+            >
               <FaSave />
             </motion.button>
-            <motion.button whileTap={{ scale: 0.95 }} onClick={cancelEditing}>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              onClick={cancelEditing}
+              className="p-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition duration-300"
+            >
               <FaTimes />
             </motion.button>
           </>
         ) : (
-          <motion.button whileTap={{ scale: 0.95 }} onClick={() => startEditing(expense)}>
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            onClick={() => startEditing(expense)}
+            className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+          >
             <FaEdit />
           </motion.button>
         )}
@@ -134,11 +145,11 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
           {deletingId === expense.PersonalExpensesId ? (
             <motion.button
               key="confirm"
-              className="delete-button confirming"
+              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
               whileTap={{ scale: 0.97 }}
-              initial={{ width: 'auto', backgroundColor: 'var(--primary-color)' }}
-              animate={{ width: '100%', backgroundColor: '#ff4d4d' }}
-              exit={{ width: 0, height: '100%', backgroundColor: 'var(--primary-color)', zIndex: '1' }}
+              initial={{ width: 'auto', backgroundColor: '#3B82F6' }}
+              animate={{ width: '100%', backgroundColor: '#EF4444' }}
+              exit={{ width: 0, backgroundColor: '#3B82F6' }}
               transition={{ duration: 0.2, ease: 'linear' }}
               onClick={() => handleDeleteClick(expense.PersonalExpensesId)}
               onMouseLeave={cancelDeleting}
@@ -149,9 +160,9 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
           ) : (
             <motion.button
               key="delete"
-              className="delete-button"
-              initial={isReturning ? { width: '100%', backgroundColor: '#ff4d4d' } : {}}
-              animate={{ width: 'auto', backgroundColor: 'var(--primary-color)' }}
+              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+              initial={isReturning ? { width: '100%', backgroundColor: '#EF4444' } : {}}
+              animate={{ width: 'auto', backgroundColor: '#EF4444' }}
               transition={{ duration: 0.85 }}
               onClick={() => handleDeleteClick(expense.PersonalExpensesId)}
             >
@@ -184,30 +195,36 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
 
   return (
     <motion.div 
-      className="personal-expenses-list"
+      className="bg-white rounded-xl shadow-lg p-6 m-4 flex-1 min-w-[400px] max-w-[400px] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
     >
-      <h2>Личные расходы</h2>
-      <div className="add-expense">
+      <h2 className="text-2xl font-semibold mb-6 text-blue-600">Личные расходы</h2>
+      <div className="flex mb-6 gap-2">
         <input
           type="text"
           value={newExpense.description}
           onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
           placeholder="Описание"
+          className="flex-1 p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
         />
         <input
           type="number"
           value={newExpense.amount}
           onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
           placeholder="Сумма"
+          className="w-24 p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
         />
-        <motion.button whileTap={{ scale: 0.95 }} onClick={handleAddExpense}>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={handleAddExpense}
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+        >
           <FaPlus />
         </motion.button>
       </div>
-      <div className="personal-expenses-list-container">
+      <div className="overflow-y-auto">
         <AnimatePresence mode="wait">
           {!isChanging && (
             <motion.ul
@@ -216,12 +233,12 @@ const PersonalExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpen
               initial="hidden"
               animate="visible"
               exit="exit"
+              className="space-y-4"
             >
               {expenses.map(expense => (
-                <motion.li
+                <motion.li 
                   key={expense.PersonalExpensesId}
-                  className="expense-item"
-                  //variants={itemVariants}
+                  className="flex justify-between items-center py-3 border-b border-gray-200 last:border-b-0"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
