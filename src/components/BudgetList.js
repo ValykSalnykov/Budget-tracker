@@ -293,8 +293,8 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
         weeks={weeks}  
         triggerUpdate={updateTrigger} 
       />
-      <div className="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0">
-        <div className="flex-1">
+      <div className="flex flex-col xl:flex-row space-y-1 md:space-x-0  md:space-y-0">
+        <div className="flex-auto">
           <IncomeList 
             incomes={incomeData} 
             onAddIncome={handleAddIncome}
@@ -302,7 +302,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
             onDeleteIncome={handleDeleteIncome}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-auto">
           <GeneralExpensesList 
             expenses={generalExpensesData}
             onAddExpense={handleAddGeneralExpense}
@@ -310,7 +310,7 @@ const BudgetList = React.memo(({ selectedWeek, weeks, selectedMonth }) => {
             onDeleteExpense={handleDeleteGeneralExpense}
           />
         </div>
-        <div className="flex-1">
+        <div className="flex-auto">
           <PersonalExpensesList 
             expenses={personalExpensesData}
             onAddExpense={handleAddPersonalExpense}

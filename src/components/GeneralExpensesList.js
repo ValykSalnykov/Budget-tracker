@@ -24,9 +24,6 @@ import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpense, onDeleteExpense }) => {
   const [newExpense, setNewExpense] = useState({ description: '', amount: '' });
   const [editingState, setEditingState] = useState({ id: null, description: '', amount: '' });
-  const [deletingId, setDeletingId] = useState(null);
-  const [isReturning, setIsReturning] = useState(false);
-  const deleteTimerRef = useRef(null);
   const [isChanging, setIsChanging] = useState(false);
   const prevExpensesRef = useRef(expenses);
 
@@ -67,24 +64,9 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
     setEditingState({ id: null, description: '', amount: '' });
   }, []);
 
-  const handleDeleteClick = useCallback((id) => {
-    if (deletingId === id) {
-      onDeleteExpense(id);
-      setDeletingId(null);
-      clearTimeout(deleteTimerRef.current);
-    } else {
-      clearTimeout(deleteTimerRef.current);
-      setDeletingId(id);
-    }
-  }, [deletingId, onDeleteExpense]);
-
-  const cancelDeleting = useCallback(() => {
-    setIsReturning(true);
-    deleteTimerRef.current = setTimeout(() => {
-      setDeletingId(null);
-      setIsReturning(false);
-    }, 2000);
-  }, []);
+  const handleDeleteExpense = useCallback((id) => {
+    onDeleteExpense(id);
+  }, [onDeleteExpense]);
 
   const renderExpenseItem = useCallback((expense) => (
     <>
@@ -139,38 +121,16 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
             <FaEdit />
           </motion.button>
         )}
-        <AnimatePresence>
-          {deletingId === expense.GeneralExpensesId ? (
-            <motion.button
-              key="confirm"
-              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
-              whileTap={{ scale: 0.97 }}
-              initial={{ width: 'auto', backgroundColor: '#3B82F6' }}
-              animate={{ width: '100%', backgroundColor: '#EF4444' }}
-              exit={{ width: 0, backgroundColor: '#3B82F6' }}
-              transition={{ duration: 0.2, ease: 'linear' }}
-              onClick={() => handleDeleteClick(expense.GeneralExpensesId)}
-              onMouseLeave={cancelDeleting}
-              onMouseEnter={() => clearTimeout(deleteTimerRef.current)}
-            >
-              Вы уверены?
-            </motion.button>
-          ) : (
-            <motion.button
-              key="delete"
-              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
-              initial={isReturning ? { width: '100%', backgroundColor: '#EF4444' } : {}}
-              animate={{ width: 'auto', backgroundColor: '#EF4444' }}
-              transition={{ duration: 0.85 }}
-              onClick={() => handleDeleteClick(expense.GeneralExpensesId)}
-            >
-              <FaTrash />
-            </motion.button>
-          )}
-        </AnimatePresence>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => handleDeleteExpense(expense.GeneralExpensesId)}
+          className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+        >
+          <FaTrash />
+        </motion.button>
       </div>
     </>
-  ), [editingState, handleUpdateExpense, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
+  ), [editingState, handleUpdateExpense, cancelEditing, startEditing, handleDeleteExpense]);
 
   const listVariants = {
     hidden: { opacity: 0 },
@@ -193,7 +153,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
 
   return (
     <motion.div 
-      className="bg-white rounded-xl shadow-lg p-6 m-4 flex-1 min-w-[400px] max-w-[400px] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
+      className="bg-white rounded-xl shadow-lg p-6 m-4 flex-auto transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -205,7 +165,7 @@ const GeneralExpensesList = React.memo(({ expenses, onAddExpense, onUpdateExpens
           value={newExpense.description}
           onChange={(e) => setNewExpense(prev => ({ ...prev, description: e.target.value }))}
           placeholder="Описание"
-          className="flex-1 p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
+          className="flex-grow p-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
         />
         <input
           type="number"

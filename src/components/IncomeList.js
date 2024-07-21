@@ -23,9 +23,6 @@ import { FaPlus, FaEdit, FaTrash, FaSave, FaTimes } from 'react-icons/fa';
 const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteIncome }) => {
   const [newIncome, setNewIncome] = useState('');
   const [editingState, setEditingState] = useState({ id: null, amount: '' });
-  const [deletingId, setDeletingId] = useState(null);
-  const [isReturning, setIsReturning] = useState(false);
-  const deleteTimerRef = useRef(null);
   const [isChanging, setIsChanging] = useState(false);
   const prevIncomesRef = useRef(incomes);
 
@@ -62,24 +59,9 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
     setEditingState({ id: null, amount: '' });
   }, []);
 
-  const handleDeleteClick = useCallback((id) => {
-    if (deletingId === id) {
-      onDeleteIncome(id);
-      setDeletingId(null);
-      clearTimeout(deleteTimerRef.current);
-    } else {
-      clearTimeout(deleteTimerRef.current);
-      setDeletingId(id);
-    }
-  }, [deletingId, onDeleteIncome]);
-
-  const cancelDeleting = useCallback(() => {
-    setIsReturning(true);
-    deleteTimerRef.current = setTimeout(() => {
-      setDeletingId(null);
-      setIsReturning(false);
-    }, 2000);
-  }, []);
+  const handleDeleteIncome = useCallback((id) => {
+    onDeleteIncome(id);
+  }, [onDeleteIncome]);
 
   const renderIncomeItem = useCallback((income) => (
     <>
@@ -89,7 +71,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
             type="number"
             value={editingState.amount}
             onChange={(e) => setEditingState(prev => ({ ...prev, amount: e.target.value }))}
-            className="w-full p-2 mr-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
+            className="w-4/5 p-0 mr-0 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
           />
         ) : (
           `${income.Amount.toFixed()} ₴`
@@ -122,51 +104,29 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
             <FaEdit />
           </motion.button>
         )}
-        <AnimatePresence>
-          {deletingId === income.IncomeId ? (
-            <motion.button
-              key="confirm"
-              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
-              whileTap={{ scale: 0.97 }}
-              initial={{ width: 'auto', backgroundColor: '#3B82F6' }}
-              animate={{ width: '100%', backgroundColor: '#EF4444' }}
-              exit={{ width: 0, backgroundColor: '#3B82F6' }}
-              transition={{ duration: 0.2, ease: 'linear' }}
-              onClick={() => handleDeleteClick(income.IncomeId)}
-              onMouseLeave={cancelDeleting}
-              onMouseEnter={() => clearTimeout(deleteTimerRef.current)}
-            >
-              Вы уверены?
-            </motion.button>
-          ) : (
-            <motion.button
-              key="delete"
-              className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
-              initial={isReturning ? { width: '100%', backgroundColor: '#EF4444' } : {}}
-              animate={{ width: 'auto', backgroundColor: '#EF4444' }}
-              transition={{ duration: 0.85 }}
-              onClick={() => handleDeleteClick(income.IncomeId)}
-            >
-              <FaTrash />
-            </motion.button>
-          )}
-        </AnimatePresence>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={() => handleDeleteIncome(income.IncomeId)}
+          className="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition duration-300"
+        >
+          <FaTrash />
+        </motion.button>
       </div>
     </>
-  ), [editingState, handleUpdateIncome, cancelEditing, deletingId, handleDeleteClick, cancelDeleting, startEditing, isReturning]);
+  ), [editingState, handleUpdateIncome, cancelEditing, startEditing, handleDeleteIncome]);
 
   const listVariants = {
     hidden: { opacity: 0 },
-    visible: { 
+    visible: {
       opacity: 1,
-      transition: { 
+      transition: {
         when: "beforeChildren",
         staggerChildren: 0.1
       }
     },
-    exit: { 
+    exit: {
       opacity: 0,
-      transition: { 
+      transition: {
         when: "afterChildren",
         staggerChildren: 0.05,
         staggerDirection: -1
@@ -175,8 +135,8 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
   };
 
   return (
-    <motion.div 
-      className="bg-white rounded-xl shadow-lg p-6 m-4 flex-1 min-w-[150px] max-w-[250px] transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
+    <motion.div
+      className="bg-white rounded-xl shadow-lg p-6 m-4 flex-auto transition duration-300 ease-in-out transform hover:-translate-y-1 hover:shadow-xl"
       initial={{ opacity: 0, y: 5 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -188,12 +148,12 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
           value={newIncome}
           onChange={(e) => setNewIncome(e.target.value)}
           placeholder="Сумма"
-          className="flex-1 p-2 mr-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
+          className="flex-grow p-2 mr-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition duration-300"
         />
         <motion.button
           whileTap={{ scale: 0.95 }}
           onClick={handleAddIncome}
-          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300"
+          className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300 flex-shrink-0"
         >
           <FaPlus />
         </motion.button>
@@ -210,7 +170,7 @@ const IncomeList = React.memo(({ incomes, onAddIncome, onUpdateIncome, onDeleteI
               className="space-y-4"
             >
               {incomes.map(income => (
-                <motion.li 
+                <motion.li
                   key={income.IncomeId}
                   className="flex justify-between items-center py-3 border-b border-gray-200 last:border-b-0"
                   initial={{ opacity: 0, y: -20 }}
