@@ -1,8 +1,8 @@
 import React from 'react';
 
-const AnimatedCloudBackground = () => {
+const AnimatedBackground = ({ opacity = 0.5 }) => {
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden">
+    <div className="fixed inset-0 z-[-1] overflow-hidden ">
       <svg
         className="absolute w-[200%] h-[200%]"
         xmlns="http://www.w3.org/2000/svg"
@@ -21,6 +21,7 @@ const AnimatedCloudBackground = () => {
               xlinkHref="/theme-light.svg"
               width="372"
               height="812"
+              opacity={opacity}
             />
           </pattern>
         </defs>
@@ -33,8 +34,8 @@ const AnimatedCloudBackground = () => {
             attributeName="transform"
             type="translate"
             from="0 0"
-            to="-128 -128"
-            dur="100s"
+            to="-372 -128"
+            dur="90s"
             repeatCount="indefinite"
           />
         </rect>
@@ -43,4 +44,4 @@ const AnimatedCloudBackground = () => {
   );
 };
 
-export default AnimatedCloudBackground;
+export default AnimatedBackground;

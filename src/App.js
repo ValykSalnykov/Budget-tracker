@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import NavigationSidebar from './components/NavigationSidebar';
 import HomePage from './components/HomePage';
-import AnimatedCloudBackground from './components/AnimatedCloudBackground';
+import AnimatedBackground from './components/AnimatedBackground';
 // import MonthCarousel from './components/MonthCarousel';
 // import WeekSelector from './components/WeekSelector';
 // import DatabaseStatus from './components/DatabaseStatus';
@@ -114,7 +114,7 @@ const App = () => {
 
     return (
         <div className="min-h-screen flex">
-            <AnimatedCloudBackground />
+            <AnimatedBackground opacity={0.5}/>
             <NavigationSidebar onExpand={handleSidebarExpand} />
             <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-40' : 'ml-14'}`}>
                 <HomePage />
