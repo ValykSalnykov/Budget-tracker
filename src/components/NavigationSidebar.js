@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Home, Settings, Mail, User } from 'lucide-react';
+import { Home, Settings, Mail, User, Sun, Moon } from 'lucide-react';
 
 const NavItem = ({ icon: Icon, label, expanded, onClick }) => {
   return (
@@ -12,7 +12,7 @@ const NavItem = ({ icon: Icon, label, expanded, onClick }) => {
   );
 };
 
-const NavigationSidebar = ({ onExpand }) => {
+const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
   const [expanded, setExpanded] = useState(false);
   const timeoutRef = useRef(null);
 
@@ -20,7 +20,7 @@ const NavigationSidebar = ({ onExpand }) => {
     timeoutRef.current = setTimeout(() => {
       setExpanded(true);
       onExpand(true);
-    }, 1000);
+    }, 1);
   };
 
   const handleMouseLeave = () => {
@@ -33,7 +33,6 @@ const NavigationSidebar = ({ onExpand }) => {
     clearTimeout(timeoutRef.current);
     setExpanded(false);
     onExpand(false);
-    // Здесь можно добавить логику для обработки кликов по пунктам меню
   };
 
   const navItems = [
@@ -45,10 +44,20 @@ const NavigationSidebar = ({ onExpand }) => {
 
   return (
     <div 
-      className={`fixed left-2 top-2 bottom-2 bg-white/5 backdrop-blur-lg shadow-lg transition-all duration-300 ease-in-out rounded-lg ${expanded ? 'w-36' : 'w-10'}`}
+      className={`fixed left-2 top-2 bottom-2 backdrop-blur-lg shadow-lg transition-all duration-100 ease-in-out rounded-lg ${
+        darkMode 
+          ? 'bg-gray-800/30 text-white' 
+          : 'bg-white/30 text-gray-900'
+      } ${
+        expanded ? 'w-36' : 'w-10'
+      }`}
       style={{
-        boxShadow: '0 4px 30px rgba(0, 0, 0, 0.1)',
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: darkMode 
+          ? '0 4px 30px rgba(0, 0, 0, 0.1)'
+          : '0 4px 30px rgba(255, 255, 255, 0.1)',
+        border: darkMode
+          ? '1px solid rgba(255, 255, 255, 0.1)'
+          : '1px solid rgba(0, 0, 0, 0.1)',
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -59,9 +68,14 @@ const NavigationSidebar = ({ onExpand }) => {
             <NavItem key={index} {...item} expanded={expanded} onClick={() => handleItemClick(item)} />
           ))}
         </div>
-        {/* Можно добавить дополнительный контент внизу, если нужно */}
         <div className="p-2">
-          {/* Например, версия приложения или кнопка выхода */}
+          <div className="flex items-center justify-center cursor-pointer" onClick={toggleDarkMode}>
+            {darkMode ? (
+              <Sun size={24} className="text-yellow-300" />
+            ) : (
+              <Moon size={24} className="text-gray-700" />
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect } from 'react';
 import NavigationSidebar from './components/NavigationSidebar';
 import HomePage from './components/HomePage';
 import AnimatedBackground from './components/AnimatedBackground';
@@ -107,16 +107,32 @@ import AnimatedBackground from './components/AnimatedBackground';
 
 const App = () => {
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
+    const [darkMode, setDarkMode] = useState(false);
+
+    useEffect(() => {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        setDarkMode(isDarkMode);
+        if (isDarkMode) {
+            document.documentElement.classList.add('dark');
+        }
+    }, []);
 
     const handleSidebarExpand = (expanded) => {
         setSidebarExpanded(expanded);
     };
 
+    const toggleDarkMode = () => {
+        const newDarkMode = !darkMode;
+        setDarkMode(newDarkMode);
+        localStorage.setItem('darkMode', newDarkMode);
+        document.documentElement.classList.toggle('dark');
+    };
+
     return (
-        <div className="min-h-screen flex">
-            <AnimatedBackground opacity={0.5}/>
-            <NavigationSidebar onExpand={handleSidebarExpand} />
-            <div className={`flex-grow transition-all duration-300 ${sidebarExpanded ? 'ml-40' : 'ml-14'}`}>
+        <div className="min-h-screen flex text-gray-900">
+            <AnimatedBackground opacity={0.5} darkMode={darkMode} />
+            <NavigationSidebar onExpand={handleSidebarExpand} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            <div className={`flex-grow transition-all duration-100 ${sidebarExpanded ? 'ml-40' : 'ml-14'}`}>
                 <HomePage />
             </div>
         </div>

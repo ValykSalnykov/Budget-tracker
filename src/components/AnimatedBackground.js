@@ -1,8 +1,10 @@
 import React from 'react';
 
-const AnimatedBackground = ({ opacity = 0.5 }) => {
+const AnimatedBackground = ({ opacity = 0.5, darkMode }) => {
+  const backgroundImage = darkMode ? "/theme-dark.svg" : "/theme-light.svg";
+
   return (
-    <div className="fixed inset-0 z-[-1] overflow-hidden ">
+    <div className="fixed inset-0 z-[-1] overflow-hidden dark:bg-gray-900">
       <svg
         className="absolute w-[200%] h-[200%]"
         xmlns="http://www.w3.org/2000/svg"
@@ -18,7 +20,7 @@ const AnimatedBackground = ({ opacity = 0.5 }) => {
             y="0"
           >
             <image
-              xlinkHref="/theme-light.svg"
+              xlinkHref={backgroundImage}
               width="372"
               height="812"
               opacity={opacity}
