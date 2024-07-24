@@ -1,18 +1,7 @@
-/**
- * @fileoverview Компонент для отображения статуса подключения к базе данных.
- * @module DatabaseStatus
- * @requires react
- * @requires ../styles/DatabaseStatus.css
- *
- * @description
- * Этот компонент отображает текущий статус подключения к базе данных.
- * Он периодически проверяет соединение и обновляет визуальный индикатор.
- * Статус может быть "подключение", "подключено" или "отключено".
-**/
-
 import React, { useState, useEffect } from 'react';
+import { Wifi, WifiLow, WifiOff } from 'lucide-react';
 
-const DatabaseStatus = () => {
+const DatabaseStatusIcon = () => {
   const [connectionStatus, setConnectionStatus] = useState('connecting');
 
   useEffect(() => {
@@ -35,19 +24,24 @@ const DatabaseStatus = () => {
     return () => clearInterval(intervalId);
   }, []);
 
-  const statusColors = {
-    connected: 'bg-green-500',
-    disconnected: 'bg-red-500',
-    connecting: 'bg-yellow-400'
+  const renderIcon = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return <Wifi size={24} className="text-green-500" />;
+      case 'connecting':
+        return <WifiLow size={24} className="text-yellow-400 animate-pulse" />;
+      case 'disconnected':
+        return <WifiOff size={24} className="text-red-500" />;
+      default:
+        return null;
+    }
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-2 z-50">
-      <div 
-        className={`h-full w-full transition-colors duration-300 ease-in-out ${statusColors[connectionStatus]} ${connectionStatus === 'connecting' ? 'animate-pulse' : ''}`}
-      ></div>
+    <div className="flex items-center justify-center">
+      {renderIcon()}
     </div>
   );
 };
 
-export default DatabaseStatus;
+export default DatabaseStatusIcon;

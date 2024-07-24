@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Home, Settings, Mail, User, Sun, MoonStar } from 'lucide-react';
-import DatabaseStatusIcon from './DatabaseStatusIcon';
+import DatabaseStatus from './DatabaseStatus';
 
 const NavItem = ({ icon: Icon, label, expanded, onClick }) => {
   return (
@@ -70,7 +70,7 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
           ))}
         </div>
         <div className="p-2 space-y-2">
-          <DatabaseStatusIcon />
+          <DatabaseStatus />
           <div className="flex items-center justify-center cursor-pointer" onClick={toggleDarkMode}>
             {darkMode ? (
               <Sun size={24} className="text-yellow-300" />
