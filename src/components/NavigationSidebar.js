@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Home, Settings, Mail, User, Sun, Moon } from 'lucide-react';
+import { Home, Settings, Mail, User, Sun, MoonStar } from 'lucide-react';
+import DatabaseStatusIcon from './DatabaseStatusIcon';
 
 const NavItem = ({ icon: Icon, label, expanded, onClick }) => {
   return (
@@ -68,12 +69,13 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
             <NavItem key={index} {...item} expanded={expanded} onClick={() => handleItemClick(item)} />
           ))}
         </div>
-        <div className="p-2">
+        <div className="p-2 space-y-2">
+          <DatabaseStatusIcon />
           <div className="flex items-center justify-center cursor-pointer" onClick={toggleDarkMode}>
             {darkMode ? (
               <Sun size={24} className="text-yellow-300" />
             ) : (
-              <Moon size={24} className="text-gray-700" />
+              <MoonStar size={24} className="text-gray-600" />
             )}
           </div>
         </div>
