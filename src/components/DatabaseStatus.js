@@ -19,7 +19,7 @@ const DatabaseStatusIcon = () => {
 
     checkConnection();
 
-    const intervalId = setInterval(checkConnection, 60000);
+    const intervalId = setInterval(checkConnection, 30000);
 
     return () => clearInterval(intervalId);
   }, []);

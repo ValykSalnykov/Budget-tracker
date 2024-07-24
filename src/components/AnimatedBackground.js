@@ -1,7 +1,7 @@
 import React from 'react';
 
 const AnimatedBackground = ({ opacity = 0.5, darkMode }) => {
-  const backgroundImage = darkMode ? "/theme-dark.svg" : "/theme-light.svg";
+  const backgroundImage = darkMode ? "/theme-dark.png" : "/theme-light.png";
 
   return (
     <div className="fixed inset-0 z-[-1] overflow-hidden dark:bg-gray-900">
