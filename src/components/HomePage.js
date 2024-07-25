@@ -3,7 +3,7 @@ import React from 'react';
 const HomePage = ({ darkMode }) => {
   return (
     <div 
-      className={`m-2 backdrop-blur-lg shadow-lg transition-all duration-300 rounded-lg overflow-auto ${
+      className={`h-5/6 m-2 backdrop-blur-lg shadow-lg transition-all duration-300 rounded-lg overflow-auto ${
         darkMode 
           ? 'bg-gray-800/30 text-white' 
           : 'bg-white/30 text-gray-900'
@@ -14,8 +14,7 @@ const HomePage = ({ darkMode }) => {
           : '0 4px 30px rgba(255, 255, 255, 0.1)',
         border: darkMode
           ? '1px solid rgba(255, 255, 255, 0.1)'
-          : '1px solid rgba(0, 0, 0, 0.1)',
-        minHeight: 'calc(100vh - 1rem)',
+          : '1px solid rgba(0, 0, 0, 0.1)'
       }}
     >
       <div className="p-6">

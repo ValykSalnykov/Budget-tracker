@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, WifiLow, WifiOff } from 'lucide-react';
+import { Database } from 'lucide-react';
 
 const DatabaseStatusIcon = () => {
   const [connectionStatus, setConnectionStatus] = useState('connecting');
@@ -27,11 +27,11 @@ const DatabaseStatusIcon = () => {
   const renderIcon = () => {
     switch (connectionStatus) {
       case 'connected':
-        return <Wifi size={24} className="text-green-500" />;
+        return <Database size={24} className="text-green-500" />;
       case 'connecting':
-        return <WifiLow size={24} className="text-yellow-400 animate-pulse" />;
+        return <Database size={24} className="text-yellow-400 animate-pulse" />;
       case 'disconnected':
-        return <WifiOff size={24} className="text-red-500" />;
+        return <Database size={24} className="text-red-500" />;
       default:
         return null;
     }
