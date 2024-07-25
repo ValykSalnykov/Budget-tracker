@@ -1,7 +1,7 @@
 import React, {useState, useEffect } from 'react';
 import NavigationSidebar from './components/NavigationSidebar';
 import HomePage from './components/HomePage';
-import AnimatedBackground from './components/AnimatedBackground';
+import Background from './components/Background';
 
 const App = () => {
     const [sidebarExpanded, setSidebarExpanded] = useState(false);
@@ -28,7 +28,7 @@ const App = () => {
 
     return (
         <div className="min-h-screen flex text-gray-900">
-            <AnimatedBackground opacity={0.5} darkMode={darkMode} />
+            <Background opacity={0.5} darkMode={darkMode} />
             <NavigationSidebar onExpand={handleSidebarExpand} darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             <div className={`flex-grow transition-all duration-100 ${sidebarExpanded ? 'ml-40' : 'ml-14'}`}>
                 <HomePage darkMode={darkMode} />

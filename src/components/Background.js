@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AnimatedBackground = ({ opacity = 0.5, darkMode }) => {
+const Background = ({ opacity = 0.5, darkMode }) => {
   const backgroundImage = darkMode ? "/theme-dark.png" : "/theme-light.png";
 
   return (
@@ -12,7 +12,7 @@ const AnimatedBackground = ({ opacity = 0.5, darkMode }) => {
       >
         <defs>
           <pattern
-            id="cloud-pattern"
+            id="wallpaper-pattern"
             patternUnits="userSpaceOnUse"
             width="372"
             height="812"
@@ -30,20 +30,12 @@ const AnimatedBackground = ({ opacity = 0.5, darkMode }) => {
         <rect
           width="100%"
           height="100%"
-          fill="url(#cloud-pattern)"
+          fill="url(#wallpaper-pattern)"
         >
-          <animateTransform
-            attributeName="transform"
-            type="translate"
-            from="0 0"
-            to="-372 -128"
-            dur="90s"
-            repeatCount="indefinite"
-          />
         </rect>
       </svg>
     </div>
   );
 };
 
-export default AnimatedBackground;
+export default Background;

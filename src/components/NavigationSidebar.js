@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Home, Settings, Mail, User, Sun, MoonStar } from 'lucide-react';
+import { Home, Sun, MoonStar } from 'lucide-react';
 import DatabaseStatus from './DatabaseStatus';
 
 const NavItem = ({ icon: Icon, label, expanded, onClick }) => {
@@ -38,14 +38,11 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
 
   const navItems = [
     { icon: Home, label: 'Главная' },
-    { icon: Mail, label: 'Сообщения' },
-    { icon: User, label: 'Профиль' },
-    { icon: Settings, label: 'Настройки' },
   ];
 
   return (
     <div 
-      className={`fixed left-2 top-2 bottom-2 backdrop-blur-lg shadow-lg transition-all duration-100 ease-in-out rounded-lg ${
+      className={`h-3/6 fixed left-2 top-2 bottom-2 backdrop-blur-lg shadow-lg transition-all duration-100 ease-in-out rounded-lg ${
         darkMode 
           ? 'bg-gray-800/30 text-white' 
           : 'bg-white/30 text-gray-900'
