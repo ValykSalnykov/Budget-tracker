@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Database } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
-const DatabaseStatusIcon = () => {
+export const useDBStatus = () => {
   const [connectionStatus, setConnectionStatus] = useState('connecting');
 
   useEffect(() => {
@@ -18,30 +17,9 @@ const DatabaseStatusIcon = () => {
     };
 
     checkConnection();
-
     const intervalId = setInterval(checkConnection, 30000);
-
     return () => clearInterval(intervalId);
   }, []);
 
-  const renderIcon = () => {
-    switch (connectionStatus) {
-      case 'connected':
-        return <Database size={24} className="text-green-500" />;
-      case 'connecting':
-        return <Database size={24} className="text-yellow-400 animate-pulse" />;
-      case 'disconnected':
-        return <Database size={24} className="text-red-500" />;
-      default:
-        return null;
-    }
-  };
-
-  return (
-    <div className="flex items-center justify-center">
-      {renderIcon()}
-    </div>
-  );
+  return connectionStatus;
 };
-
-export default DatabaseStatusIcon;

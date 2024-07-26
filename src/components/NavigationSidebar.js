@@ -1,33 +1,68 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { Home, ChartSpline, PiggyBank, CreditCard, ChartPie, RefreshCcw, Settings, Sun, MoonStar } from 'lucide-react';
-import DatabaseStatus from './DatabaseStatus';
+import { Home, ChartSpline, PiggyBank, CreditCard, ChartPie, RefreshCcw, Settings, Sun, MoonStar, Database } from 'lucide-react';
+import { useTheme } from '../contexts/ThemeContext';
+import { useDBStatus } from '../hooks/useDBStatus';
 
-const NavItem = ({ icon: Icon, label, expanded, onClick, isActive, darkMode }) => {
+const NavItem = ({ icon: Icon, label, expanded, onClick, isActive, children }) => {
+  const { darkMode } = useTheme();
   return (
-    <div 
-      className={`flex items-center p-2 cursor-pointer transition-all duration-300 hover:bg-white/10 
-        ${isActive 
-          ? darkMode 
-            ? 'bg-white/20' 
-            : 'bg-gray-200'
-          : ''
-        }`} 
-      onClick={onClick}
-    >
-      <Icon size={24} className="flex-shrink-0"/>
-      <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
-        {label}
+    <div>
+      <div 
+        className={`flex items-center p-2 cursor-pointer transition-all duration-100 hover:bg-white/10 
+          ${isActive 
+            ? darkMode 
+              ? 'bg-white/20' 
+              : 'bg-gray-200'
+            : ''
+          }`} 
+        onClick={onClick}
+      >
+        <Icon size={24} className="flex-shrink-0"/>
+        <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-100 ${expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
+          {label}
+        </span>
+      </div>
+      {children}
+    </div>
+  );
+};
+
+const DatabaseStatusWithLabel = ({ expanded }) => {
+  const connectionStatus = useDBStatus();
+
+  const getStatusLabel = () => {
+    switch(connectionStatus) {
+      case 'connected': return 'Подключено';
+      case 'disconnected': return 'Отключено';
+      default: return '......';
+    }
+  };
+
+  const getIconColor = () => {
+    switch(connectionStatus) {
+      case 'connected': return 'text-green-500';
+      case 'disconnected': return 'text-red-500';
+      default: return 'text-yellow-400 animate-pulse';
+    }
+  };
+
+  return (
+    <div className="flex items-center p-2 transition-all duration-100">
+      <Database size={24} className={`flex-shrink-0 ${getIconColor()}`} />
+      <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-100 ${expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
+        {getStatusLabel()}
       </span>
     </div>
   );
 };
 
-const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
+const NavigationSidebar = ({ onExpand }) => {
   const [expanded, setExpanded] = useState(false);
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const [activeItem, setActiveItem] = useState('Главная');
   const [menuWidth, setMenuWidth] = useState(0);
   const timeoutRef = useRef(null);
+  const { darkMode, toggleDarkMode } = useTheme();
 
   const mainNavItems = useMemo(() => [
     { icon: Home, label: 'Главная' },
@@ -55,7 +90,7 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
     document.body.appendChild(tempElement);
     const width = tempElement.offsetWidth;
     document.body.removeChild(tempElement);
-    setMenuWidth(width + 70); // 24px for icon, 8px for left padding, 8px for right padding, 30px buffer
+    setMenuWidth(width + 70);
   }, [allItems]);
 
   const handleMouseEnter = () => {
@@ -69,7 +104,7 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
       setExpanded(false);
       setSettingsExpanded(false);
       onExpand(false);
-    }, 300); // Добавляем небольшую задержку перед сворачиванием
+    }, 300);
   };
 
   const handleItemClick = (item) => {
@@ -78,12 +113,11 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
     } else {
       setActiveItem(item.label);
     }
-    // Удаляем код, который сворачивал меню при клике
   };
 
   return (
     <div 
-      className={`h-3/6 fixed left-2 top-2 bottom-2 backdrop-blur-lg shadow-lg transition-all duration-300 ease-in-out rounded-lg ${
+      className={`h-3/6 fixed left-2 top-2 bottom-2 backdrop-blur-lg shadow-lg transition-all duration-100 ease-in-out rounded-lg ${
         darkMode 
           ? 'bg-gray-800/30 text-white' 
           : 'bg-white/30 text-gray-900'
@@ -110,7 +144,6 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
               expanded={expanded} 
               onClick={() => handleItemClick(item)} 
               isActive={activeItem === item.label}
-              darkMode={darkMode}
             />
           ))}
         </div>
@@ -121,55 +154,16 @@ const NavigationSidebar = ({ onExpand, darkMode, toggleDarkMode }) => {
             expanded={expanded} 
             onClick={() => handleItemClick({label: 'Настройки'})}
             isActive={settingsExpanded}
-            darkMode={darkMode}
-          />
-          <div className={`overflow-hidden transition-all duration-300 ease-in-out ${settingsExpanded ? 'max-h-40' : 'max-h-0'}`}>
-            {settingsNavItems.map((item, index) => (
-              <NavItem key={index} {...item} expanded={expanded} onClick={item.onClick} darkMode={darkMode} />
-            ))}
-            <DatabaseStatusWithLabel expanded={expanded} />
-          </div>
+          >
+            <div className={`overflow-hidden transition-all duration-100 ease-in-out ${settingsExpanded ? 'max-h-80' : 'max-h-0'}`}>
+              {settingsNavItems.map((item, index) => (
+                <NavItem key={index} {...item} expanded={expanded} onClick={item.onClick} />
+              ))}
+              <DatabaseStatusWithLabel expanded={expanded} />
+            </div>
+          </NavItem>
         </div>
       </div>
-    </div>
-  );
-};
-
-const DatabaseStatusWithLabel = ({ expanded }) => {
-  const [connectionStatus, setConnectionStatus] = useState('connecting');
-
-  useEffect(() => {
-    const checkConnection = async () => {
-      try {
-        const response = await fetch('/.netlify/functions/db-status');
-        const data = await response.json();
-        setConnectionStatus(data.status);
-      } catch (error) {
-        console.error('Ошибка при проверке статуса базы данных:', error);
-        setConnectionStatus('disconnected');
-      }
-    };
-
-    checkConnection();
-    const intervalId = setInterval(checkConnection, 30000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  const getStatusLabel = () => {
-    switch(connectionStatus) {
-      case 'connected': return 'Подключено';
-      case 'disconnected': return 'Отключено';
-      default: return 'Подключение...';
-    }
-  };
-
-  return (
-    <div className="flex items-center p-2 transition-all duration-300">
-      <DatabaseStatus />
-      <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-300 ${expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
-        {getStatusLabel()}
-      </span>
     </div>
   );
 };

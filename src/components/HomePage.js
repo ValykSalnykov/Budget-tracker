@@ -1,9 +1,12 @@
 import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
-const HomePage = ({ darkMode }) => {
+const HomePage = () => {
+  const { darkMode } = useTheme();
+
   return (
     <div 
-      className={`h-5/6 m-2 backdrop-blur-lg shadow-lg transition-all duration-300 rounded-lg overflow-auto ${
+      className={`h-5/6 m-2 backdrop-blur-lg shadow-lg transition-all duration-100 rounded-lg overflow-auto ${
         darkMode 
           ? 'bg-gray-800/30 text-white' 
           : 'bg-white/30 text-gray-900'
@@ -18,14 +21,10 @@ const HomePage = ({ darkMode }) => {
       }}
     >
       <div className="p-6">
-        <h1 className={`text-2xl font-bold mb-4 ${
-          darkMode ? 'text-white' : 'text-gray-900'
-        }`}>
+        <h1 className="text-2xl font-bold mb-4">
           Добро пожаловать на домашнюю страницу
         </h1>
-        <p className={`${
-          darkMode ? 'text-gray-300' : 'text-gray-700'
-        }`}>
+        <p className={darkMode ? 'text-gray-300' : 'text-gray-700'}>
           Это пример содержимого домашней страницы. Вы можете добавить здесь любую информацию или компоненты.
         </p>
       </div>

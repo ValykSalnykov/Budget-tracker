@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 
-const Background = ({ opacity = 0.5, darkMode }) => {
+const Background = ({ opacity = 0.5 }) => {
+  const { darkMode } = useTheme();
   const backgroundImage = darkMode ? "/theme-dark.png" : "/theme-light.png";
 
   return (
