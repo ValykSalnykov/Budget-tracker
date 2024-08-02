@@ -49,7 +49,7 @@ const DatabaseStatusWithLabel = ({ expanded }) => {
   return (
     <div className="flex items-center p-2 transition-all duration-100">
       <Database size={24} className={`flex-shrink-0 ${getIconColor()}`} />
-      <span className={`ml-2 whitespace-nowrap overflow-hidden transition-all duration-100 ${expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
+      <span className={`ml-2 whitespace-nowrap overflow-hidden cursor-default transition-all duration-100 ${expanded ? 'w-auto opacity-100' : 'w-0 opacity-0'}`}>
         {getStatusLabel()}
       </span>
     </div>
